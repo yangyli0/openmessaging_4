@@ -2,6 +2,8 @@ package io.openmessaging.demo;
 
 import io.openmessaging.*;
 
+import java.util.Map;
+
 /**
  * Created by lee on 5/16/17.
  */
@@ -15,7 +17,14 @@ public class DefaultProducer implements Producer {
         messageStore = MessageStore.getInstance(properties);
     }
     @Override public BytesMessage createBytesMessageToTopic(String topic, byte[] body) {
-        return messageFactory.createBytesMessageToTopic(topic, body);
+        //return messageFactory.createBytesMessageToTopic(topic, body);
+        DefaultBytesMessage message = (DefaultBytesMessage) messageFactory.createBytesMessageToTopic(topic, body);
+
+        for (String key : properties.keySet()) {
+            message.putProperties(key, properties.getString(key));
+        }
+
+        return  message;
     }
     @Override public BytesMessage createBytesMessageToQueue(String queue, byte[] body) {
         return messageFactory.createBytesMessageToQueue(queue, body);
