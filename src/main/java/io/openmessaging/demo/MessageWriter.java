@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -73,19 +74,58 @@ public class MessageWriter implements Runnable {
           while (true) {
 
               BytesMessage msg = (BytesMessage) mq.take();
-              byte[] headBytes = (fileName + ",").getBytes();
+
+              // 获取body
               byte[] bodyBytes = msg.getBody();
 
+              //获取property对应的byte数组
+
+              DefaultKeyValue property = (DefaultKeyValue) msg.properties();
+              StringBuilder sb = new StringBuilder();
+              for (String key: property.keySet()) {
+                  sb.append(key);
+                  sb.append('#');
+                  sb.append(property.getValue(key));
+                  sb.append('|');
+              }
+              sb.deleteCharAt(sb.length()-1);
+              sb.append(',');
+              byte[] propertyBytes = sb.toString().getBytes();
+
+              // 获取header对应的byte数组
+              DefaultKeyValue headers = (DefaultKeyValue)msg.headers();
+              sb = new StringBuilder();
+              for (String key: headers.keySet()) {
+                  sb.append(key);
+                  sb.append('#');
+                  sb.append(headers.getValue(key));
+                  sb.append('|');
+              }
+              sb.deleteCharAt(sb.length()-1);
+              sb.append(',');
+
+              byte[] headerBytes = sb.toString().getBytes();
+
+
+
               long end = (i / BUFFER_SIZE + 1) * BUFFER_SIZE - 1;
+              int msgLen = propertyBytes.length + headerBytes.length + bodyBytes.length + 1; // 算上结尾的'\n'
 
               // 跨越不同的块
-              if ( i + headBytes.length + bodyBytes.length + 1 >= end) {
-                  byte[] msgBytes = new byte[headBytes.length + bodyBytes.length + 1];
-                  System.arraycopy(headBytes, 0, msgBytes, 0, headBytes.length);
-                  System.arraycopy(bodyBytes, 0, msgBytes, headBytes.length, bodyBytes.length);
+              if ( i + msgLen >= end) {
+
+                  int j = 0;
+                  byte[] msgBytes = new byte[msgLen];
+                  System.arraycopy(propertyBytes, 0, msgBytes, j, propertyBytes.length);
+                  j += propertyBytes.length;
+
+                  System.arraycopy(headerBytes, 0, msgBytes, j, headerBytes.length);
+                  j += headerBytes.length;
+
+                  System.arraycopy(bodyBytes, 0, msgBytes, j, bodyBytes.length);
                   msgBytes[msgBytes.length - 1] = (byte)('\n');
 
-                  int len = (int) (end - i + 1);
+                  int len = (int) (end - i + 1);    // 前半段长度
                   int w = 0;
                   for (; w < len; w++) // 先放置前半段
                       mapBuf.put(msgBytes[w]);
@@ -97,12 +137,15 @@ public class MessageWriter implements Runnable {
 
               }
               else {
-                  mapBuf.put(headBytes);
+                  //mapBuf.put(headBytes);
+                  //mapBuf.put(bodyBytes);
+                  mapBuf.put(propertyBytes);
+                  mapBuf.put(headerBytes);
                   mapBuf.put(bodyBytes);
                   mapBuf.put((byte)('\n'));
               }
 
-              i += headBytes.length + bodyBytes.length + 1; // 更新游标在文件中的位置
+              i += msgLen; // 更新游标在文件中的位置
 
           }
 

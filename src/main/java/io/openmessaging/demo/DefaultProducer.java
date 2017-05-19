@@ -17,14 +17,7 @@ public class DefaultProducer implements Producer {
         messageStore = MessageStore.getInstance(properties);
     }
     @Override public BytesMessage createBytesMessageToTopic(String topic, byte[] body) {
-        //return messageFactory.createBytesMessageToTopic(topic, body);
-        DefaultBytesMessage message = (DefaultBytesMessage) messageFactory.createBytesMessageToTopic(topic, body);
-
-        for (String key : properties.keySet()) {
-            message.putProperties(key, properties.getString(key));
-        }
-
-        return  message;
+        return messageFactory.createBytesMessageToTopic(topic, body);
     }
     @Override public BytesMessage createBytesMessageToQueue(String queue, byte[] body) {
         return messageFactory.createBytesMessageToQueue(queue, body);

@@ -11,7 +11,6 @@ import java.util.Set;
  */
 public class DefaultKeyValue implements KeyValue {
     private final Map<String, Object> kvs = new HashMap<>();
-
     @Override
     public KeyValue put(String key, int value) {
         kvs.put(key, value);
@@ -64,5 +63,46 @@ public class DefaultKeyValue implements KeyValue {
     @Override
     public boolean containsKey(String key) {
         return kvs.containsKey(key);
+    }
+
+
+    public boolean isInt(String key) {
+        Object obj = kvs.get(key);
+        return (obj instanceof  Integer);
+    }
+
+    public boolean isDouble(String key) {
+        Object obj = kvs.get(key);
+        return (obj instanceof  Double);
+    }
+
+    public boolean isLong(String key) {
+        Object obj = kvs.get(key);
+        return (obj instanceof  Long);
+    }
+
+    public boolean isString(String key) {
+        Object obj = kvs.get(key);
+        return (obj instanceof String);
+    }
+
+    public String getValue(String key) {
+        if (isInt(key)) {
+            int val = getInt(key);
+            return "i" + val;
+        }
+        else if (isLong(key)) {
+            long val = getLong(key);
+            return "l" + val;
+        }
+        else if (isDouble(key)) {
+            double val = getDouble(key);
+            return "d" + val;
+        }
+        else {
+            String val = getString(key);
+            return "s" + val;
+        }
+
     }
 }

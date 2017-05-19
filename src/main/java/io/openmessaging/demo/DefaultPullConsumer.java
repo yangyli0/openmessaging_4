@@ -2,6 +2,7 @@ package io.openmessaging.demo;
 
 import io.openmessaging.KeyValue;
 import io.openmessaging.Message;
+import io.openmessaging.MessageHeader;
 import io.openmessaging.PullConsumer;
 
 import java.nio.MappedByteBuffer;
@@ -62,7 +63,7 @@ public class DefaultPullConsumer implements PullConsumer{
         // 取消息
         int i = curOffset;
         byte[] msgBytes = null;
-        //for (; i < mapBuf.capacity() && mapBuf.get(i) != '\n'; i++) ;
+
         for (; mapBuf.get(i) != 0 && mapBuf.get(i) != '\n'; i++);
 
         if (mapBuf.get(i) == 0) return null;    // 到达边界
@@ -92,7 +93,6 @@ public class DefaultPullConsumer implements PullConsumer{
             MappedByteBuffer otherMapBuf = msgFile.getMapBufList().get(otherBufIndex);
 
             int w = otherOffset;
-            //for (; w < otherMapBuf.capacity() && otherMapBuf.get(w) != '\n'; w++) ;
             for (; otherMapBuf.get(w) != 0 && otherMapBuf.get(w) != '\n'; w++);
 
             if (otherMapBuf.get(w) == 0)    return null;    //到达边界
@@ -115,21 +115,85 @@ public class DefaultPullConsumer implements PullConsumer{
             // 更新buffer内偏移量
             bookkeeper.setOffset(w+1);
         }
+        return assemble(msgBytes);
+    }
 
-        // 产生消息
+    public Message assemble(byte[] msgBytes) {
         DefaultMessageFactory messageFactory = new DefaultMessageFactory();
-        for (i = 0; i < msgBytes.length && msgBytes[i] != ','; i++) ;
-        byte[] headBytes = Arrays.copyOfRange(msgBytes, 0, i ); // [start, end)
-        byte[] bodyBytes = Arrays.copyOfRange(msgBytes, i + 1, msgBytes.length);
-        String queueOrTopic = new String(headBytes);
-        if (queueOrTopic.startsWith("QUEUE_"))
-            message = messageFactory.createBytesMessageToQueue(queueOrTopic, bodyBytes);
+        Message message = null;
+        int i, j;
+        // 获取property
+        DefaultKeyValue property = new DefaultKeyValue();
+        for (i = 0; i < msgBytes.length && msgBytes[i] != ','; i++);
+        byte[] propertyBytes = Arrays.copyOfRange(msgBytes, 0, i);  // [start, end)
+        insertKVs(propertyBytes, property);
+        j = ++i; // 跳过","
+
+        // 获取headers
+        DefaultKeyValue header = new DefaultKeyValue();
+        for (; i < msgBytes.length && msgBytes[i] != ','; i++);
+        byte[] headerBytes = Arrays.copyOfRange(msgBytes, j, i);
+        insertKVs(headerBytes, header);
+        j = ++i; // 跳过","
+
+        // 获取body
+        for (; i < msgBytes.length && msgBytes[i] != '\n'; i++);
+        byte[] body = Arrays.copyOfRange(msgBytes, j, i);
+
+        // 组装
+        String queueOrTopic = header.getString(MessageHeader.TOPIC);
+        if (queueOrTopic != null)
+            message = messageFactory.createBytesMessageToTopic(queueOrTopic, body);
         else
-            message = messageFactory.createBytesMessageToTopic(queueOrTopic, bodyBytes);
+            message = messageFactory.createBytesMessageToQueue(queueOrTopic, body);
+
+        // put property
+        for (String key: property.keySet()) {
+            if (header.isInt(key))
+                message.putProperties(key, property.getInt(key));
+            else if (header.isDouble(key))
+                message.putProperties(key, property.getDouble(key));
+            else if (header.isLong(key))
+                message.putProperties(key, property.getLong(key));
+            else
+                message.putProperties(key, property.getString(key));
+        }
+
+        // put headers
+        for (String key: header.keySet()) {
+            if (header.isInt(key))
+                message.putHeaders(key, header.getInt(key));
+            else if (header.isDouble(key))
+                message.putHeaders(key, header.getDouble(key));
+            else if (header.isLong(key))
+                message.putHeaders(key, header.getLong(key));
+            else
+                message.putHeaders(key, header.getString(key));
+        }
 
         return message;
 
     }
+
+    public void insertKVs(byte[] kvBytes, KeyValue map) {
+        String kvStr = new String(kvBytes);
+        String[] kvPairs = kvStr.split("\\|");
+        for (String kv: kvPairs) {
+            String[] tuple = kv.split("#");
+            if(tuple[1].startsWith("i"))
+                map.put(tuple[0], Integer.parseInt(tuple[1].substring(1)));
+            else if(tuple[1].startsWith("d"))
+                map.put(tuple[0], Double.parseDouble(tuple[1].substring(1)));
+            else if (tuple[1].startsWith("l"))
+                map.put(tuple[0], Long.parseLong(tuple[1].substring(1)));
+            else
+                map.put(tuple[0], tuple[1].substring(1));
+        }
+
+
+
+    }
+
     @Override public Message poll(KeyValue properties) { throw new UnsupportedOperationException("Unsupported"); }
 
     @Override public synchronized void attachQueue(String queueName, Collection<String> topics) {

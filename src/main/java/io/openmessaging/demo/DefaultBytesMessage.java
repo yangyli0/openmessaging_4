@@ -15,7 +15,6 @@ public class DefaultBytesMessage implements BytesMessage {
     public DefaultBytesMessage(byte[] body) {
         this.body = body;
     }
-
     @Override public byte[] getBody() {
         return body;
     }
@@ -52,22 +51,27 @@ public class DefaultBytesMessage implements BytesMessage {
         headers.put(key, value);
         return this;
     }
+
     @Override public Message putProperties(String key, int value) {
+        if (properties == null) properties = new DefaultKeyValue();
         properties.put(key, value);
         return this;
     }
 
     @Override public Message putProperties(String key, long value) {
+        if (properties == null) properties = new DefaultKeyValue();
         properties.put(key, value);
         return this;
     }
 
     @Override public Message putProperties(String key, double value) {
+        if (properties == null) properties = new DefaultKeyValue();
         properties.put(key, value);
         return this;
     }
 
     @Override public Message putProperties(String key, String value) {
+        if (properties == null) properties = new DefaultKeyValue();
         properties.put(key, value);
         return this;
     }
