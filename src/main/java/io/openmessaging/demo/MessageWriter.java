@@ -4,14 +4,12 @@ import io.openmessaging.BytesMessage;
 import io.openmessaging.KeyValue;
 import io.openmessaging.Message;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by lee on 5/16/17.
@@ -20,42 +18,200 @@ public class MessageWriter implements Runnable {
     KeyValue properties;
     String fileName;
     BlockingQueue<Message> mq;
-    private int BUFFER_SIZE = 256 * 1024 * 1024;
+    private int BUFFER_SIZE =  512 * 1024;    //TODO:待调整
+    private int MQ_CAPACITY = 10000;    //TODO: 待调整
+    private byte[] bytesJar;  // 缓存消息
+    private int jarCursor = 0; // bytesJar中游标当前位置 数组下标不能超过最大整数
+    private long fileCursor = 0;    // 文件中游标的当前位置
 
-    public MessageWriter(KeyValue properties, String fileName, BlockingQueue<Message> mq) {
+    MappedByteBuffer mapBuf = null;
+    FileChannel fc = null;
+
+    private boolean sendOver;
+
+    public MessageWriter(KeyValue properties, String fileName) {
         this.properties = properties;
         this.fileName = fileName;
-        this.mq = mq;
+        mq = new LinkedBlockingQueue<>(MQ_CAPACITY);
+        bytesJar = new byte[BUFFER_SIZE];
+
+        // 初始化fileChannel
     }
 
-    //ByteBuffer方式
+    public void dump() {
+
+        sendOver = true;
+        while (!mq.isEmpty()) {  // 这时候可以不要考虑线程安全了
+            BytesMessage  message = (BytesMessage)mq.remove();
+            byte[] propertyBytes = getKeyValueBytes(properties);
+            byte[] headerBytes = getKeyValueBytes(message.headers());
+            byte[] body = message.getBody();
+            System.out.print(propertyBytes);
+            System.out.print(headerBytes);
+            System.out.print(body);
+            System.out.println();
+
+
+            // 注意填充的先后顺序
+            fill(propertyBytes, "property");
+            fill(headerBytes, "header");
+            fill(body, "body");
+
+        }
+        // 倒空jar
+        if (jarCursor > 0) {
+            /*
+            try {
+                fileCursor += BUFFER_SIZE;
+                mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, jarCursor); // 保证不会有空白空间浪费
+            } catch (IOException e) { e.printStackTrace(); }
+            */
+            mapBuf.put(bytesJar, 0, jarCursor);
+        }
+
+    }
+
+    public void addMessage(Message message) {
+        try {
+            mq.put(message);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void fill(byte[] component, String name) {
+        if (name.equals("property") || name.equals("header")) {
+            if (jarCursor + component.length <= bytesJar.length) {
+                for(int k = 0; k < component.length; )
+                    bytesJar[jarCursor++] = component[k++];
+            }
+            else {
+                // 先填入前半部分，填满jar
+                int k = 0;
+                for (; jarCursor < bytesJar.length;)
+                    bytesJar[jarCursor++] = component[k++];
+                mapBuf.put(bytesJar);
+
+                try {
+                    fileCursor += BUFFER_SIZE;  //映射之前先更新指针
+                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                    jarCursor = 0;
+                } catch (IOException e) { e.printStackTrace(); }
+                // 填入剩余部分
+                for(; k < component.length; )
+                    bytesJar[jarCursor++] = component[k++];
+            }
+        }
+        else {  // 添加行尾分隔符
+            if (jarCursor + component.length + 1 <= bytesJar.length) {
+                for (int k = 0; k < component.length;)
+                    bytesJar[jarCursor++] = component[k++];
+
+                bytesJar[jarCursor++] = (byte)('\n');
+            }
+            else {
+                int k = 0;
+                for (; jarCursor < bytesJar.length;)
+                    bytesJar[jarCursor++] = component[k++];
+                mapBuf.put(bytesJar);
+
+                try {
+                    fileCursor += BUFFER_SIZE;  //映射之前先更新指针
+                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                    jarCursor = 0;
+                } catch (IOException e) { e.printStackTrace(); }
+                // 填入剩余部分
+                for(; k < component.length; )
+                    bytesJar[jarCursor++] = component[k++];
+
+                bytesJar[jarCursor++] = (byte)('\n');
+            }
+
+        }
+
+    }
+    /*
+    public void fillBody(byte[] component) {
+        if (jarCursor + component.length <= bytesJar.length) {
+            for (int k = 0; k < component.length; )
+                bytesJar[jarCursor++] = component[k++];
+        }
+        bytesJar[jarCursor++] = '\n';
+        else {
+            // 先填入前半部分，填满jar
+            int k = 0;
+            for (; jarCursor < bytesJar.length;)
+                bytesJar[jarCursor++] = component[k++];
+            mapBuf.put(bytesJar);
+
+            try {
+                fileCursor += BUFFER_SIZE;  //映射之前先更新指针
+                mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                jarCursor = 0;
+            } catch (IOException e) { e.printStackTrace(); }
+            // 填入剩余部分
+            for(; k < component.length; )
+                bytesJar[jarCursor++] = component[k++];
+        }
+    }
+    */
 
     /*
+    public void fillSingle(byte seperator) {
+        if (jarCursor < bytesJar.length ) {
+            bytesJar[jarCursor++] = seperator;
+        }
+        else {
+            mapBuf.put(bytesJar);
+            try {
+                fileCursor += BUFFER_SIZE;  // 映射之前更新指针
+                mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                jarCursor = 0;
+            } catch (IOException e) { e.printStackTrace(); }
+            bytesJar[jarCursor++] = seperator;
+        }
+    }
+    */
+
+    public byte[] getKeyValueBytes(KeyValue map) {
+        StringBuilder sb = new StringBuilder();
+        DefaultKeyValue kvs = (DefaultKeyValue)map;
+        for (String key: kvs.keySet()) {
+            sb.append(key);
+            sb.append('#');
+            sb.append(kvs.getValue(key));
+            sb.append('|');
+        }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append(',');
+        return sb.toString().getBytes();
+    }
+
     public void run() {
-        String absPath = properties.getString("STORE_PATH")+"/messagestore/" + fileName;
+        String absPath = properties.getString("STORE_PATH")+ "/" + fileName;
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(absPath, "rw");
-            FileChannel fc = raf.getChannel();
-            ByteBuffer buf = ByteBuffer.allocate(1024); // TODO: 修改消息体大小
-            while(true) {
-                BytesMessage msg = (BytesMessage) mq.take();
-                byte[] headBytes = (fileName + ",").getBytes();
-                byte[] bodyBytes = msg.getBody();
-                buf.put(headBytes);
-                buf.put(bodyBytes);
-                buf.put((byte)'\n');
-                buf.flip();
-                fc.write(buf);
-                buf.clear();
+            fc = raf.getChannel();
+            mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+            while (!sendOver) {
+                BytesMessage message = (BytesMessage)mq.take();
+                byte[] propertyBytes = getKeyValueBytes(properties);
+                byte[] headerBytes = getKeyValueBytes(message.headers());
+                byte[] body = message.getBody();
+
+                // 注意填充的先后顺序
+                fill(propertyBytes, "property");
+                fill(headerBytes, "header");
+                fill(body, "body");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-    */
 
 
 
@@ -63,6 +219,7 @@ public class MessageWriter implements Runnable {
 
 
     // mappedByteBuffer
+    /*
     public void run() {
         String absPath = properties.getString("STORE_PATH")+ "/" + fileName;
         RandomAccessFile raf = null;
@@ -156,8 +313,37 @@ public class MessageWriter implements Runnable {
             e.printStackTrace();
         }
     }
+    */
 
 
+    //ByteBuffer方式
+
+    /*
+    public void run() {
+        String absPath = properties.getString("STORE_PATH")+"/messagestore/" + fileName;
+        RandomAccessFile raf = null;
+        try {
+            raf = new RandomAccessFile(absPath, "rw");
+            FileChannel fc = raf.getChannel();
+            ByteBuffer buf = ByteBuffer.allocate(1024); // TODO: 修改消息体大小
+            while(true) {
+                BytesMessage msg = (BytesMessage) mq.take();
+                byte[] headBytes = (fileName + ",").getBytes();
+                byte[] bodyBytes = msg.getBody();
+                buf.put(headBytes);
+                buf.put(bodyBytes);
+                buf.put((byte)'\n');
+                buf.flip();
+                fc.write(buf);
+                buf.clear();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    */
 
 
 }

@@ -64,9 +64,10 @@ public class DefaultPullConsumer implements PullConsumer{
         int i = curOffset;
         byte[] msgBytes = null;
 
-        for (; mapBuf.get(i) != 0 && mapBuf.get(i) != '\n'; i++);
-
+        for (;  mapBuf.get(i) != 0 && mapBuf.get(i) != '\n'; i++);
         if (mapBuf.get(i) == 0) return null;    // 到达边界
+
+
 
         // 不跨越buffer
         if (i < mapBuf.capacity()) {    // i 此时指向 '\n'
@@ -93,9 +94,9 @@ public class DefaultPullConsumer implements PullConsumer{
             MappedByteBuffer otherMapBuf = msgFile.getMapBufList().get(otherBufIndex);
 
             int w = otherOffset;
-            for (; otherMapBuf.get(w) != 0 && otherMapBuf.get(w) != '\n'; w++);
-
+            for (;  otherMapBuf.get(w) != 0 && otherMapBuf.get(w) != '\n'; w++);
             if (otherMapBuf.get(w) == 0)    return null;    //到达边界
+
 
             int firstLen = mapBuf.capacity() - curOffset;
             int secondLen = w - otherOffset;
@@ -179,7 +180,9 @@ public class DefaultPullConsumer implements PullConsumer{
         String kvStr = new String(kvBytes);
         String[] kvPairs = kvStr.split("\\|");
         for (String kv: kvPairs) {
+
             String[] tuple = kv.split("#");
+
             if(tuple[1].startsWith("i"))
                 map.put(tuple[0], Integer.parseInt(tuple[1].substring(1)));
             else if(tuple[1].startsWith("d"))
@@ -188,6 +191,25 @@ public class DefaultPullConsumer implements PullConsumer{
                 map.put(tuple[0], Long.parseLong(tuple[1].substring(1)));
             else
                 map.put(tuple[0], tuple[1].substring(1));
+
+
+            /*
+            try {
+                if(tuple[1].startsWith("i"))
+                    map.put(tuple[0], Integer.parseInt(tuple[1].substring(1)));
+                else if(tuple[1].startsWith("d"))
+                    map.put(tuple[0], Double.parseDouble(tuple[1].substring(1)));
+                else if (tuple[1].startsWith("l"))
+                    map.put(tuple[0], Long.parseLong(tuple[1].substring(1)));
+                else
+                    map.put(tuple[0], tuple[1].substring(1));
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(kvStr);
+                //System.out.println(kv);
+            }
+            */
+
+
         }
 
 

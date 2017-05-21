@@ -23,6 +23,12 @@ public class DefaultProducer implements Producer {
         return messageFactory.createBytesMessageToQueue(queue, body);
     }
 
+    public void flush() {
+        // 清空队列和缸里的消息, 所有线程都会调用
+        messageStore.finishCount();
+
+    }
+
     @Override public void start() {}
 
     @Override public void shutdown() {}
