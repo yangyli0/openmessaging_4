@@ -49,7 +49,7 @@ public class MessageStore {
 
     }
 
-    public  void putMessage(Message message) {  //去掉同步关键字出错
+    public synchronized void putMessage(Message message) {  //去掉同步关键字出错
         try {
             String queueOrTopic = message.headers().getString(MessageHeader.QUEUE);
             if (queueOrTopic == null)
