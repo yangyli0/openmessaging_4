@@ -1,0 +1,993 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 12288 bytes for committing reserved memory.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_linux.cpp:2627), pid=7800, tid=140268322162432
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_91-b14) (build 1.8.0_91-b14)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.91-b14 mixed mode linux-amd64 compressed oops)
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f92bc1d2800):  JavaThread "Unknown thread" [_thread_in_vm, id=7802, stack(0x00007f92c3740000,0x00007f92c3841000)]
+
+Stack: [0x00007f92c3740000,0x00007f92c3841000],  sp=0x00007f92c383f990,  free space=1022k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xabc18a]  VMError::report_and_die()+0x2ba
+V  [libjvm.so+0x4fafeb]  report_vm_out_of_memory(char const*, int, unsigned long, VMErrorType, char const*)+0x8b
+V  [libjvm.so+0x91cbb3]  os::Linux::commit_memory_impl(char*, unsigned long, bool)+0x103
+V  [libjvm.so+0x91cc7c]  os::pd_commit_memory(char*, unsigned long, bool)+0xc
+V  [libjvm.so+0x91672a]  os::commit_memory(char*, unsigned long, bool)+0x2a
+V  [libjvm.so+0x91ae4f]  os::pd_create_stack_guard_pages(char*, unsigned long)+0x7f
+V  [libjvm.so+0xa61e4e]  JavaThread::create_stack_guard_pages()+0x5e
+V  [libjvm.so+0x6ceaa4]  attach_current_thread+0xb4
+V  [libjvm.so+0x6cb9b8]  jni_DestroyJavaVM+0x58
+C  [libjli.so+0x763d]  JavaMain+0x27d
+C  [libpthread.so.0+0x80a4]  start_thread+0xc4
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f92bc0d3800 JavaThread "Service Thread" daemon [_thread_blocked, id=7833, stack(0x00007f92a4345000,0x00007f92a4446000)]
+  0x00007f92bc0cf800 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=7832, stack(0x00007f92a4446000,0x00007f92a4547000)]
+  0x00007f92bc0cd800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=7831, stack(0x00007f92a4547000,0x00007f92a4648000)]
+  0x00007f92bc0ca800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=7830, stack(0x00007f92a4648000,0x00007f92a4749000)]
+  0x00007f92bc0c8800 JavaThread "JDWP Event Helper Thread" daemon [_thread_blocked, id=7828, stack(0x00007f92a484a000,0x00007f92a494b000)]
+  0x00007f92bc0b8800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=7824, stack(0x00007f92a4c50000,0x00007f92a4d51000)]
+  0x00007f92bc086800 JavaThread "Finalizer" daemon [_thread_blocked, id=7817, stack(0x00007f92a4d51000,0x00007f92a4e52000)]
+  0x00007f92bc082000 JavaThread "Reference Handler" daemon [_thread_blocked, id=7816, stack(0x00007f92a4e52000,0x00007f92a4f53000)]
+
+Other Threads:
+  0x00007f92bc07a800 VMThread [stack: 0x00007f92a4f53000,0x00007f92a5054000] [id=7812]
+  0x00007f92bc0d6000 WatcherThread [stack: 0x00007f92a4244000,0x00007f92a4345000] [id=7834]
+
+=>0x00007f92bc1d2800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=7802, stack(0x00007f92c3740000,0x00007f92c3841000)]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 16896K, used 1438K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 9% used [0x00000000ed980000,0x00000000edae7a48,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4678K, capacity 5054K, committed 5248K, reserved 1056768K
+  class space    used 544K, capacity 561K, committed 640K, reserved 1048576K
+
+Card table byte_map: [0x00007f92c0163000,0x00007f92c031e000] byte_map_base: 0x00007f92bfb1d000
+
+Marking Bits: (ParMarkBitMap*) 0x00007f92c2c30d60
+ Begin Bits: [0x00007f92a6460000, 0x00007f92a7230000)
+ End Bits:   [0x00007f92a7230000, 0x00007f92a8000000)
+
+Polling page: 0x00007f92c385c000
+
+CodeCache: size=245760Kb used=1757Kb max_used=1774Kb free=244002Kb
+ bounds [0x00007f92ad000000, 0x00007f92ad270000, 0x00007f92bc000000]
+ total_blobs=540 nmethods=277 adapters=185
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 7.256 Thread 0x00007f92bc0cf800  284       3       java.nio.Buffer::remaining (10 bytes)
+Event: 7.256 Thread 0x00007f92bc0cf800 nmethod 284 0x00007f92ad110b10 code [0x00007f92ad110c60, 0x00007f92ad110db0]
+Event: 7.256 Thread 0x00007f92bc0cf800  285       3       java.nio.Buffer::hasRemaining (17 bytes)
+Event: 7.256 Thread 0x00007f92bc0cf800 nmethod 285 0x00007f92ad1106d0 code [0x00007f92ad110840, 0x00007f92ad1109f0]
+Event: 25.156 Thread 0x00007f92bc0cf800  286       3       sun.nio.cs.StreamEncoder::ensureOpen (18 bytes)
+Event: 25.156 Thread 0x00007f92bc0cf800 nmethod 286 0x00007f92ad1213d0 code [0x00007f92ad121560, 0x00007f92ad1217c8]
+Event: 25.156 Thread 0x00007f92bc0cf800  287       3       java.nio.CharBuffer::hasArray (20 bytes)
+Event: 25.157 Thread 0x00007f92bc0cf800 nmethod 287 0x00007f92ad121010 code [0x00007f92ad121180, 0x00007f92ad121370]
+Event: 25.157 Thread 0x00007f92bc0cf800  288       3       java.io.Writer::write (11 bytes)
+Event: 25.157 Thread 0x00007f92bc0cf800 nmethod 288 0x00007f92ad120a50 code [0x00007f92ad120bc0, 0x00007f92ad120ee8]
+
+GC Heap History (10 events):
+Event: 4.951 GC heap before
+{Heap before GC invocations=7 (full 3):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+Event: 4.981 GC heap after
+Heap after GC invocations=7 (full 3):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+}
+Event: 4.981 GC heap before
+{Heap before GC invocations=8 (full 3):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+Event: 4.981 GC heap after
+Heap after GC invocations=8 (full 3):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+  to   space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+}
+Event: 4.981 GC heap before
+{Heap before GC invocations=9 (full 4):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+  to   space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+Event: 5.010 GC heap after
+Heap after GC invocations=9 (full 4):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+  to   space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+}
+Event: 5.011 GC heap before
+{Heap before GC invocations=10 (full 4):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+  to   space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+Event: 5.011 GC heap after
+Heap after GC invocations=10 (full 4):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+}
+Event: 5.011 GC heap before
+{Heap before GC invocations=11 (full 5):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+Event: 5.038 GC heap after
+Heap after GC invocations=11 (full 5):
+ PSYoungGen      total 16896K, used 0K [0x00000000ed980000, 0x00000000eec00000, 0x0000000100000000)
+  eden space 14848K, 0% used [0x00000000ed980000,0x00000000ed980000,0x00000000ee800000)
+  from space 2048K, 0% used [0x00000000eea00000,0x00000000eea00000,0x00000000eec00000)
+  to   space 2048K, 0% used [0x00000000ee800000,0x00000000ee800000,0x00000000eea00000)
+ ParOldGen       total 38400K, used 12283K [0x00000000c8c00000, 0x00000000cb180000, 0x00000000ed980000)
+  object space 38400K, 31% used [0x00000000c8c00000,0x00000000c97fedd8,0x00000000cb180000)
+ Metaspace       used 4643K, capacity 4990K, committed 5248K, reserved 1056768K
+  class space    used 542K, capacity 561K, committed 640K, reserved 1048576K
+}
+
+Deoptimization events (2 events):
+Event: 0.372 Thread 0x00007f92bc00c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f92ad1368e0 method=java.lang.String.indexOf(II)I @ 49
+Event: 5.102 Thread 0x00007f92bc1db000 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f92ad198f78 method=java.nio.channels.spi.AbstractInterruptibleChannel.end(Z)V @ 31
+
+Internal exceptions (10 events):
+Event: 4.797 Thread 0x00007f92bc1d7800 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000ee1fc2b0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 4.797 Thread 0x00007f92bc1d5000 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000eda19360) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 4.797 Thread 0x00007f92bc1db000 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000ee245b58) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 4.797 Thread 0x00007f92bc1d2800 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000ee22fc10) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 4.921 Thread 0x00007f92bc1dc800 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000c95062a8) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 5.038 Thread 0x00007f92bc1d5000 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000ed980040) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 5.102 Thread 0x00007f92bc1db000 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000eda29d00) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 5.102 Thread 0x00007f92bc1d2800 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000eda45ae0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 5.121 Thread 0x00007f92bc1d7800 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000eda5fc00) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+Event: 7.204 Thread 0x00007f92bc1dc800 Exception <a 'java/lang/OutOfMemoryError': Map failed> (0x00000000eda7ba70) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u91/6644/hotspot/src/share/vm/prims/jni.cpp, line 735]
+
+Events (10 events):
+Event: 25.158 loading class org/slf4j/helpers/FormattingTuple done
+Event: 25.158 Executing VM operation: RevokeBias
+Event: 25.158 Executing VM operation: RevokeBias done
+Event: 25.158 Thread 0x00007f92bc00c800 DEOPT PACKING pc=0x00007f92ad14d014 sp=0x00007f92c383e520
+Event: 25.158 Thread 0x00007f92bc00c800 DEOPT UNPACKING pc=0x00007f92ad047633 sp=0x00007f92c383e360 mode 1
+Event: 25.158 Executing VM operation: RevokeBias
+Event: 25.158 Executing VM operation: RevokeBias done
+Event: 25.159 Thread 0x00007f92bc00c800 DEOPT PACKING pc=0x00007f92ad14cdb4 sp=0x00007f92c383e6b0
+Event: 25.159 Thread 0x00007f92bc00c800 DEOPT UNPACKING pc=0x00007f92ad047633 sp=0x00007f92c383e508 mode 1
+Event: 25.160 Thread 0x00007f92bc00c800 Thread exited: 0x00007f92bc00c800
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:06 6422745                            /opt/jdk/jdk1.8.0_91/bin/java
+00600000-00601000 rw-p 00000000 08:06 6422745                            /opt/jdk/jdk1.8.0_91/bin/java
+010f7000-01118000 rw-p 00000000 00:00 0                                  [heap]
+c8c00000-cb180000 rw-p 00000000 00:00 0 
+cb180000-ed980000 ---p 00000000 00:00 0 
+ed980000-eec00000 rw-p 00000000 00:00 0 
+eec00000-100000000 ---p 00000000 00:00 0 
+100000000-1000a0000 rw-p 00000000 00:00 0 
+1000a0000-140000000 ---p 00000000 00:00 0 
+7f922f258000-7f922f259000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f259000-7f922f25a000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f25a000-7f922f25b000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f25b000-7f922f25c000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f25c000-7f922f25d000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f25d000-7f922f25e000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f25e000-7f922f25f000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f25f000-7f922f260000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f260000-7f922f261000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f261000-7f922f262000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f262000-7f922f263000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f263000-7f922f264000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f264000-7f922f265000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f265000-7f922f266000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f266000-7f922f267000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f267000-7f922f268000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f268000-7f922f269000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f269000-7f922f26a000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f26a000-7f922f26b000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f26b000-7f922f26c000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f26c000-7f922f26d000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f26d000-7f922f26e000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f26e000-7f922f26f000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f26f000-7f922f270000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f270000-7f922f271000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f271000-7f922f272000 r--s 00048000 08:06 2883816                    /tmp/TOPIC_2
+7f922f272000-7f922f273000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f273000-7f922f274000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f274000-7f922f275000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f275000-7f922f276000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f276000-7f922f277000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f277000-7f922f278000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f278000-7f922f279000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f279000-7f922f27a000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f27a000-7f922f27b000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f27b000-7f922f27c000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f27c000-7f922f27d000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f27d000-7f922f27e000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f27e000-7f922f27f000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f27f000-7f922f280000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f280000-7f922f281000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f281000-7f922f282000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f282000-7f922f283000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f283000-7f922f284000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f284000-7f922f285000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f285000-7f922f286000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f286000-7f922f287000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f287000-7f922f288000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f288000-7f922f289000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f289000-7f922f28a000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f28a000-7f922f28b000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f28b000-7f922f28c000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f28c000-7f922f28d000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f28d000-7f922f28e000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f28e000-7f922f28f000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f28f000-7f922f290000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f290000-7f922f291000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f291000-7f922f292000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f292000-7f922f293000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f293000-7f922f294000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f294000-7f922f295000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f295000-7f922f296000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f296000-7f922f297000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f297000-7f922f298000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f298000-7f922f299000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f299000-7f922f29a000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f29a000-7f922f29b000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f29b000-7f922f29c000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f29c000-7f922f29d000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f29d000-7f922f29e000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f29e000-7f922f29f000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f29f000-7f922f2a0000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2a0000-7f922f2a1000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2a1000-7f922f2a2000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2a2000-7f922f2a3000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2a3000-7f922f2a4000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2a4000-7f922f2a5000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2a5000-7f922f2a6000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2a6000-7f922f2a7000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2a7000-7f922f2a8000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2a8000-7f922f2a9000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2a9000-7f922f2aa000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2aa000-7f922f2ab000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2ab000-7f922f2ac000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ac000-7f922f2ad000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2ad000-7f922f2ae000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ae000-7f922f2af000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2af000-7f922f2b0000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2b0000-7f922f2b1000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2b1000-7f922f2b2000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2b2000-7f922f2b3000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2b3000-7f922f2b4000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2b4000-7f922f2b5000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2b5000-7f922f2b6000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2b6000-7f922f2b7000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2b7000-7f922f2b8000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2b8000-7f922f2b9000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2b9000-7f922f2ba000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ba000-7f922f2bb000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2bb000-7f922f2bc000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2bc000-7f922f2bd000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2bd000-7f922f2be000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2be000-7f922f2bf000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2bf000-7f922f2c0000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2c0000-7f922f2c1000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2c1000-7f922f2c2000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2c2000-7f922f2c3000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2c3000-7f922f2c4000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2c4000-7f922f2c5000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2c5000-7f922f2c6000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2c6000-7f922f2c7000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2c7000-7f922f2c8000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2c8000-7f922f2c9000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2c9000-7f922f2ca000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ca000-7f922f2cb000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2cb000-7f922f2cc000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2cc000-7f922f2cd000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2cd000-7f922f2ce000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ce000-7f922f2cf000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2cf000-7f922f2d0000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2d0000-7f922f2d1000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2d1000-7f922f2d2000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2d2000-7f922f2d3000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2d3000-7f922f2d4000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2d4000-7f922f2d5000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2d5000-7f922f2d6000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2d6000-7f922f2d7000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2d7000-7f922f2d8000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2d8000-7f922f2d9000 r--s 00069000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2d9000-7f922f2da000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2da000-7f922f2db000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2db000-7f922f2dc000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2dc000-7f922f2dd000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2dd000-7f922f2de000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2de000-7f922f2df000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2df000-7f922f2e0000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2e0000-7f922f2e1000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2e1000-7f922f2e2000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2e2000-7f922f2e3000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2e3000-7f922f2e4000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2e4000-7f922f2e5000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2e5000-7f922f2e6000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2e6000-7f922f2e7000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2e7000-7f922f2e8000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2e8000-7f922f2e9000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2e9000-7f922f2ea000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ea000-7f922f2eb000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2eb000-7f922f2ec000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ec000-7f922f2ed000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2ed000-7f922f2ee000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2ee000-7f922f2ef000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2ef000-7f922f2f0000 r--s 00047000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2f0000-7f922f2f1000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2f1000-7f922f2f2000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2f2000-7f922f2f3000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2f3000-7f922f2f4000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2f4000-7f922f2f5000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2f5000-7f922f2f6000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2f6000-7f922f2f7000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2f7000-7f922f2f8000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2f8000-7f922f2f9000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2f9000-7f922f2fa000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2fa000-7f922f2fb000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2fb000-7f922f2fc000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2fc000-7f922f2fd000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2fd000-7f922f2fe000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f2fe000-7f922f2ff000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f2ff000-7f922f300000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f300000-7f922f301000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f301000-7f922f302000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f302000-7f922f303000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f303000-7f922f304000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f304000-7f922f305000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f305000-7f922f306000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f306000-7f922f307000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f307000-7f922f308000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f308000-7f922f309000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f309000-7f922f30a000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f30a000-7f922f30b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f30b000-7f922f30c000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f30c000-7f922f30d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f30d000-7f922f30e000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f30e000-7f922f30f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f30f000-7f922f310000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f310000-7f922f311000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f311000-7f922f312000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f312000-7f922f313000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f313000-7f922f314000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f314000-7f922f315000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f315000-7f922f316000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f316000-7f922f317000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f317000-7f922f318000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f318000-7f922f319000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f319000-7f922f31a000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f31a000-7f922f31b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f31b000-7f922f31c000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f31c000-7f922f31d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f31d000-7f922f31e000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f31e000-7f922f31f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f31f000-7f922f320000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f320000-7f922f321000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f321000-7f922f322000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f322000-7f922f323000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f323000-7f922f324000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f324000-7f922f325000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f325000-7f922f326000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f326000-7f922f327000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f327000-7f922f328000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f328000-7f922f329000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f329000-7f922f32a000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f32a000-7f922f32b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f32b000-7f922f32c000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f32c000-7f922f32d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f32d000-7f922f32e000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f32e000-7f922f32f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f32f000-7f922f330000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f330000-7f922f331000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f331000-7f922f332000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f332000-7f922f333000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f333000-7f922f334000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f334000-7f922f335000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f335000-7f922f336000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f336000-7f922f337000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f337000-7f922f338000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f338000-7f922f339000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f339000-7f922f33a000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f33a000-7f922f33b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f33b000-7f922f33c000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f33c000-7f922f33d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f33d000-7f922f33e000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f33e000-7f922f33f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f33f000-7f922f340000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f340000-7f922f341000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f341000-7f922f342000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f342000-7f922f343000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f343000-7f922f344000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f344000-7f922f345000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f345000-7f922f346000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f346000-7f922f347000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f347000-7f922f348000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f348000-7f922f349000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f349000-7f922f34a000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f34a000-7f922f34b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f34b000-7f922f34c000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f34c000-7f922f34d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f34d000-7f922f34e000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f34e000-7f922f34f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f34f000-7f922f350000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f350000-7f922f351000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f351000-7f922f352000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f352000-7f922f353000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f353000-7f922f354000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f354000-7f922f355000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f355000-7f922f356000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f356000-7f922f357000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f357000-7f922f358000 r--s 00068000 08:06 2883817                    /tmp/TOPIC_5
+7f922f358000-7f922f359000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f359000-7f922f35a000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f35a000-7f922f35b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f35b000-7f922f35c000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f35c000-7f922f35d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f35d000-7f922f35e000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f35e000-7f922f35f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f35f000-7f922f360000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f360000-7f922f361000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f361000-7f922f362000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f362000-7f922f363000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f363000-7f922f364000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f364000-7f922f365000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f365000-7f922f366000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f366000-7f922f367000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f367000-7f922f368000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f368000-7f922f369000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f369000-7f922f36a000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f36a000-7f922f36b000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f36b000-7f922f36c000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f36c000-7f922f36d000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f36d000-7f922f36e000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f36e000-7f922f36f000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f36f000-7f922f370000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f370000-7f922f371000 r--s 00046000 08:06 2883816                    /tmp/TOPIC_2
+7f922f371000-7f922f372000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f372000-7f922f373000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f373000-7f922f374000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f374000-7f922f375000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f375000-7f922f376000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f376000-7f922f377000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f377000-7f922f378000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f378000-7f922f379000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f379000-7f922f37a000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f37a000-7f922f37b000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f37b000-7f922f37c000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f37c000-7f922f37d000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f37d000-7f922f37e000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f37e000-7f922f37f000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f37f000-7f922f380000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f380000-7f922f381000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f381000-7f922f382000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f382000-7f922f383000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f383000-7f922f384000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f384000-7f922f385000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f385000-7f922f386000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f386000-7f922f387000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f387000-7f922f388000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f388000-7f922f389000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f389000-7f922f38a000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f38a000-7f922f38b000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f38b000-7f922f38c000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f38c000-7f922f38d000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f38d000-7f922f38e000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f38e000-7f922f38f000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f38f000-7f922f390000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f390000-7f922f391000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f391000-7f922f392000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f392000-7f922f393000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f393000-7f922f394000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f394000-7f922f395000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f395000-7f922f396000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f396000-7f922f397000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f397000-7f922f398000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f398000-7f922f399000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f399000-7f922f39a000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f39a000-7f922f39b000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f39b000-7f922f39c000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f39c000-7f922f39d000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f39d000-7f922f39e000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f39e000-7f922f39f000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f39f000-7f922f3a0000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3a0000-7f922f3a1000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3a1000-7f922f3a2000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3a2000-7f922f3a3000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3a3000-7f922f3a4000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3a4000-7f922f3a5000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3a5000-7f922f3a6000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3a6000-7f922f3a7000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3a7000-7f922f3a8000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3a8000-7f922f3a9000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3a9000-7f922f3aa000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3aa000-7f922f3ab000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3ab000-7f922f3ac000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ac000-7f922f3ad000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3ad000-7f922f3ae000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ae000-7f922f3af000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3af000-7f922f3b0000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3b0000-7f922f3b1000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3b1000-7f922f3b2000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3b2000-7f922f3b3000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3b3000-7f922f3b4000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3b4000-7f922f3b5000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3b5000-7f922f3b6000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3b6000-7f922f3b7000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3b7000-7f922f3b8000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3b8000-7f922f3b9000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3b9000-7f922f3ba000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ba000-7f922f3bb000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3bb000-7f922f3bc000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3bc000-7f922f3bd000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3bd000-7f922f3be000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3be000-7f922f3bf000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3bf000-7f922f3c0000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3c0000-7f922f3c1000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3c1000-7f922f3c2000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3c2000-7f922f3c3000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3c3000-7f922f3c4000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3c4000-7f922f3c5000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3c5000-7f922f3c6000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3c6000-7f922f3c7000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3c7000-7f922f3c8000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3c8000-7f922f3c9000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3c9000-7f922f3ca000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ca000-7f922f3cb000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3cb000-7f922f3cc000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3cc000-7f922f3cd000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3cd000-7f922f3ce000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ce000-7f922f3cf000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3cf000-7f922f3d0000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3d0000-7f922f3d1000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3d1000-7f922f3d2000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3d2000-7f922f3d3000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3d3000-7f922f3d4000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3d4000-7f922f3d5000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3d5000-7f922f3d6000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3d6000-7f922f3d7000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3d7000-7f922f3d8000 r--s 00067000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3d8000-7f922f3d9000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3d9000-7f922f3da000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3da000-7f922f3db000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3db000-7f922f3dc000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3dc000-7f922f3dd000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3dd000-7f922f3de000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3de000-7f922f3df000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3df000-7f922f3e0000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3e0000-7f922f3e1000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3e1000-7f922f3e2000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3e2000-7f922f3e3000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3e3000-7f922f3e4000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3e4000-7f922f3e5000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3e5000-7f922f3e6000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3e6000-7f922f3e7000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3e7000-7f922f3e8000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3e8000-7f922f3e9000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3e9000-7f922f3ea000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ea000-7f922f3eb000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3eb000-7f922f3ec000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ec000-7f922f3ed000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3ed000-7f922f3ee000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3ee000-7f922f3ef000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3ef000-7f922f3f0000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3f0000-7f922f3f1000 r--s 00045000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3f1000-7f922f3f2000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3f2000-7f922f3f3000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3f3000-7f922f3f4000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3f4000-7f922f3f5000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3f5000-7f922f3f6000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3f6000-7f922f3f7000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3f7000-7f922f3f8000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3f8000-7f922f3f9000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3f9000-7f922f3fa000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3fa000-7f922f3fb000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3fb000-7f922f3fc000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3fc000-7f922f3fd000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3fd000-7f922f3fe000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f3fe000-7f922f3ff000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f3ff000-7f922f400000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f400000-7f922f401000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f401000-7f922f402000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f402000-7f922f403000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f403000-7f922f404000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f404000-7f922f405000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f405000-7f922f406000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f406000-7f922f407000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f407000-7f922f408000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f408000-7f922f409000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f409000-7f922f40a000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f40a000-7f922f40b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f40b000-7f922f40c000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f40c000-7f922f40d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f40d000-7f922f40e000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f40e000-7f922f40f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f40f000-7f922f410000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f410000-7f922f411000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f411000-7f922f412000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f412000-7f922f413000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f413000-7f922f414000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f414000-7f922f415000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f415000-7f922f416000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f416000-7f922f417000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f417000-7f922f418000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f418000-7f922f419000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f419000-7f922f41a000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f41a000-7f922f41b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f41b000-7f922f41c000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f41c000-7f922f41d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f41d000-7f922f41e000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f41e000-7f922f41f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f41f000-7f922f420000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f420000-7f922f421000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f421000-7f922f422000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f422000-7f922f423000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f423000-7f922f424000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f424000-7f922f425000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f425000-7f922f426000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f426000-7f922f427000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f427000-7f922f428000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f428000-7f922f429000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f429000-7f922f42a000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f42a000-7f922f42b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f42b000-7f922f42c000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f42c000-7f922f42d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f42d000-7f922f42e000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f42e000-7f922f42f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f42f000-7f922f430000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f430000-7f922f431000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f431000-7f922f432000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f432000-7f922f433000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f433000-7f922f434000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f434000-7f922f435000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f435000-7f922f436000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f436000-7f922f437000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f437000-7f922f438000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f438000-7f922f439000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f439000-7f922f43a000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f43a000-7f922f43b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f43b000-7f922f43c000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f43c000-7f922f43d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f43d000-7f922f43e000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f43e000-7f922f43f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f43f000-7f922f440000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f440000-7f922f441000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f441000-7f922f442000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f442000-7f922f443000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f443000-7f922f444000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f444000-7f922f445000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f445000-7f922f446000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f446000-7f922f447000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f447000-7f922f448000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f448000-7f922f449000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f449000-7f922f44a000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f44a000-7f922f44b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f44b000-7f922f44c000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f44c000-7f922f44d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f44d000-7f922f44e000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f44e000-7f922f44f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f44f000-7f922f450000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f450000-7f922f451000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f451000-7f922f452000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f452000-7f922f453000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f453000-7f922f454000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f454000-7f922f455000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f455000-7f922f456000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f456000-7f922f457000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f457000-7f922f458000 r--s 00066000 08:06 2883817                    /tmp/TOPIC_5
+7f922f458000-7f922f459000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f459000-7f922f45a000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f45a000-7f922f45b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f45b000-7f922f45c000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f45c000-7f922f45d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f45d000-7f922f45e000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f45e000-7f922f45f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f45f000-7f922f460000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f460000-7f922f461000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f461000-7f922f462000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f462000-7f922f463000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f463000-7f922f464000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f464000-7f922f465000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f465000-7f922f466000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f466000-7f922f467000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f467000-7f922f468000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f468000-7f922f469000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f469000-7f922f46a000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f46a000-7f922f46b000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f46b000-7f922f46c000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f46c000-7f922f46d000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f46d000-7f922f46e000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f46e000-7f922f46f000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f46f000-7f922f470000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f470000-7f922f471000 r--s 00044000 08:06 2883816                    /tmp/TOPIC_2
+7f922f471000-7f922f472000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f472000-7f922f473000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f473000-7f922f474000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f474000-7f922f475000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f475000-7f922f476000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f476000-7f922f477000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f477000-7f922f478000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f478000-7f922f479000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f479000-7f922f47a000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f47a000-7f922f47b000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f47b000-7f922f47c000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f47c000-7f922f47d000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f47d000-7f922f47e000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f47e000-7f922f47f000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f47f000-7f922f480000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f480000-7f922f481000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f481000-7f922f482000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f482000-7f922f483000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f483000-7f922f484000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f484000-7f922f485000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f485000-7f922f486000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f486000-7f922f487000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f487000-7f922f488000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f488000-7f922f489000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f489000-7f922f48a000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f48a000-7f922f48b000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f48b000-7f922f48c000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f48c000-7f922f48d000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f48d000-7f922f48e000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f48e000-7f922f48f000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f48f000-7f922f490000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f490000-7f922f491000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f491000-7f922f492000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f492000-7f922f493000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f493000-7f922f494000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f494000-7f922f495000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f495000-7f922f496000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f496000-7f922f497000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f497000-7f922f498000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f498000-7f922f499000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f499000-7f922f49a000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f49a000-7f922f49b000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f49b000-7f922f49c000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f49c000-7f922f49d000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f49d000-7f922f49e000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f49e000-7f922f49f000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f49f000-7f922f4a0000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4a0000-7f922f4a1000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4a1000-7f922f4a2000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4a2000-7f922f4a3000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4a3000-7f922f4a4000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4a4000-7f922f4a5000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4a5000-7f922f4a6000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4a6000-7f922f4a7000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4a7000-7f922f4a8000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4a8000-7f922f4a9000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4a9000-7f922f4aa000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4aa000-7f922f4ab000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4ab000-7f922f4ac000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ac000-7f922f4ad000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4ad000-7f922f4ae000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ae000-7f922f4af000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4af000-7f922f4b0000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4b0000-7f922f4b1000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4b1000-7f922f4b2000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4b2000-7f922f4b3000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4b3000-7f922f4b4000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4b4000-7f922f4b5000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4b5000-7f922f4b6000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4b6000-7f922f4b7000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4b7000-7f922f4b8000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4b8000-7f922f4b9000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4b9000-7f922f4ba000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ba000-7f922f4bb000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4bb000-7f922f4bc000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4bc000-7f922f4bd000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4bd000-7f922f4be000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4be000-7f922f4bf000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4bf000-7f922f4c0000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4c0000-7f922f4c1000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4c1000-7f922f4c2000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4c2000-7f922f4c3000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4c3000-7f922f4c4000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4c4000-7f922f4c5000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4c5000-7f922f4c6000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4c6000-7f922f4c7000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4c7000-7f922f4c8000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4c8000-7f922f4c9000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4c9000-7f922f4ca000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ca000-7f922f4cb000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4cb000-7f922f4cc000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4cc000-7f922f4cd000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4cd000-7f922f4ce000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ce000-7f922f4cf000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4cf000-7f922f4d0000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4d0000-7f922f4d1000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4d1000-7f922f4d2000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4d2000-7f922f4d3000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4d3000-7f922f4d4000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4d4000-7f922f4d5000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4d5000-7f922f4d6000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4d6000-7f922f4d7000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4d7000-7f922f4d8000 r--s 00065000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4d8000-7f922f4d9000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4d9000-7f922f4da000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4da000-7f922f4db000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4db000-7f922f4dc000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4dc000-7f922f4dd000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4dd000-7f922f4de000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4de000-7f922f4df000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4df000-7f922f4e0000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4e0000-7f922f4e1000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4e1000-7f922f4e2000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4e2000-7f922f4e3000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4e3000-7f922f4e4000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4e4000-7f922f4e5000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4e5000-7f922f4e6000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4e6000-7f922f4e7000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4e7000-7f922f4e8000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4e8000-7f922f4e9000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4e9000-7f922f4ea000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ea000-7f922f4eb000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4eb000-7f922f4ec000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ec000-7f922f4ed000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4ed000-7f922f4ee000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4ee000-7f922f4ef000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4ef000-7f922f4f0000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4f0000-7f922f4f1000 r--s 00043000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4f1000-7f922f4f2000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4f2000-7f922f4f3000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4f3000-7f922f4f4000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4f4000-7f922f4f5000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4f5000-7f922f4f6000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4f6000-7f922f4f7000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4f7000-7f922f4f8000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4f8000-7f922f4f9000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4f9000-7f922f4fa000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4fa000-7f922f4fb000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4fb000-7f922f4fc000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4fc000-7f922f4fd000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4fd000-7f922f4fe000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f4fe000-7f922f4ff000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f4ff000-7f922f500000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f500000-7f922f501000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f501000-7f922f502000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f502000-7f922f503000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f503000-7f922f504000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f504000-7f922f505000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f505000-7f922f506000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f506000-7f922f507000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f507000-7f922f508000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f508000-7f922f509000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f509000-7f922f50a000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f50a000-7f922f50b000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f50b000-7f922f50c000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f50c000-7f922f50d000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f50d000-7f922f50e000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f50e000-7f922f50f000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f50f000-7f922f510000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f510000-7f922f511000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f511000-7f922f512000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f512000-7f922f513000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f513000-7f922f514000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f514000-7f922f515000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f515000-7f922f516000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f516000-7f922f517000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f517000-7f922f518000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f518000-7f922f519000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f519000-7f922f51a000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f51a000-7f922f51b000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f51b000-7f922f51c000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f51c000-7f922f51d000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f51d000-7f922f51e000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f51e000-7f922f51f000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f51f000-7f922f520000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f520000-7f922f521000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f521000-7f922f522000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f522000-7f922f523000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f523000-7f922f524000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f524000-7f922f525000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f525000-7f922f526000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f526000-7f922f527000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f527000-7f922f528000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f528000-7f922f529000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f529000-7f922f52a000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f52a000-7f922f52b000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f52b000-7f922f52c000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f52c000-7f922f52d000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f52d000-7f922f52e000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f52e000-7f922f52f000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f52f000-7f922f530000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f530000-7f922f531000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f531000-7f922f532000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f532000-7f922f533000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f533000-7f922f534000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f534000-7f922f535000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f535000-7f922f536000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f536000-7f922f537000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f537000-7f922f538000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f538000-7f922f539000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f539000-7f922f53a000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f53a000-7f922f53b000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f53b000-7f922f53c000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f53c000-7f922f53d000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f53d000-7f922f53e000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f53e000-7f922f53f000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f53f000-7f922f540000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f540000-7f922f541000 r--s 00064000 08:06 2883817                    /tmp/TOPIC_5
+7f922f541000-7f922f542000 r--s 00042000 08:06 2883816                    /tmp/TOPIC_2
+7f922f542000-7f922f543000 r--s 00064000 08:06 2883817                    /t

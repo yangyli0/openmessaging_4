@@ -16,7 +16,7 @@ public class MessageFile {
     private KeyValue properties;
     private String fileName;
 
-    private final int BUFFER_SIZE = 512 * 1024 * 1024;
+    private final int BUFFER_SIZE = 256 * 1024 * 1024;
     private List<MappedByteBuffer> mapBufList = new ArrayList<>();
 
     public MessageFile(KeyValue properties, String fileName) {
@@ -33,7 +33,7 @@ public class MessageFile {
         String absPath = properties.getString("STORE_PATH")+ "/" +fileName;
         RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(absPath, "rw");
+            raf = new RandomAccessFile(absPath, "r");
             FileChannel fc = raf.getChannel();
 
             for (long i = 0; i < fc.size(); i += BUFFER_SIZE) { // i需要是long型，i 最后等于文件大小

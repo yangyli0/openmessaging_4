@@ -37,7 +37,7 @@ public class MessageStore {
         this.properties = properties;
     }
 
-    public  synchronized void finishCount() {    //TODO: 同步关键字待删除
+    public  void finishCount() {    //TODO: 同步关键字待删除
         int cnt = finishCnt.incrementAndGet();
         if (cnt == numOfProducer.get()) {
             // 通知所有线程清空容器和队列
