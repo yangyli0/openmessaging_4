@@ -44,12 +44,12 @@ public class MessageStore {
             for(String bucket: writerTable.keySet()) {
                 writerTable.get(bucket).dump();
             }
-            //System.out.printf("Total Producers: %d%n", cnt);    // TODO: 待删除
+
         }
 
     }
 
-    public synchronized void putMessage(Message message) {  //去掉同步关键字出错
+    public  void putMessage(Message message) {  //去掉同步关键字出错
         try {
             String queueOrTopic = message.headers().getString(MessageHeader.QUEUE);
             if (queueOrTopic == null)
