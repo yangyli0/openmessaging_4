@@ -18,8 +18,8 @@ public class MessageWriter implements Runnable {
     KeyValue properties;
     String fileName;
     BlockingQueue<Message> mq;
-    private int BUFFER_SIZE =   128 * 1024;    //TODO:待调整
-    private int MQ_CAPACITY = 1000;    //TODO: 待调整
+    private int BUFFER_SIZE =   4 * 1024 * 1024;    //TODO:待调整
+    private int MQ_CAPACITY = 40000;    //TODO: 待调整
     private byte[] bytesJar;  // 缓存消息
     private int jarCursor = 0; // bytesJar中游标当前位置 数组下标不能超过最大整数
     private long fileCursor = 0;    // 文件中游标的当前位置
