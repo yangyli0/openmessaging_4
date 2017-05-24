@@ -1,5 +1,6 @@
 package io.openmessaging.demo;
 
+import com.sun.javafx.collections.MappingChange;
 import io.openmessaging.KeyValue;
 import io.openmessaging.Message;
 import io.openmessaging.MessageHeader;
@@ -70,7 +71,7 @@ public class DefaultPullConsumer implements PullConsumer{
 
         byte[] msgBytes = null;
         int i = curOffset;
-        for (; i < mapBuf.capacity() && mapBuf.get(i) != '\n'; i++);   // '\n'一定在 0 之前出现
+        for (; i < mapBuf.capacity() && mapBuf.get(i) != 10; i++);   // '@'一定在 0 之前出现
         if (i >= mapBuf.capacity()) {
             bookkeeper.increaseBufIndex();
             bookkeeper.setOffset(0);
@@ -78,7 +79,7 @@ public class DefaultPullConsumer implements PullConsumer{
             MappedByteBuffer otherMapBuf = msgFile.getMapBufList().get(otherBufIndex);
             int otherOffset = bookkeeper.getCurOffset();
             int w = otherOffset;
-            for (; otherMapBuf.get(w) != '\n'; w++);
+            for (; otherMapBuf.get(w) != 10; w++);
             int firstLen = i - curOffset;
             int secondLen = w - otherOffset;
             msgBytes = new byte[firstLen + secondLen];
@@ -129,20 +130,20 @@ public class DefaultPullConsumer implements PullConsumer{
         int i = curOffset;
         byte[] msgBytes = null;
 
-        for (;  i < mapBuf.capacity() && mapBuf.get(i) != 0 && mapBuf.get(i) != '\n'; i++);
+        for (;  i < mapBuf.capacity() && mapBuf.get(i) != 0 && mapBuf.get(i) != '@'; i++);
         if (i < mapBuf.capacity() && mapBuf.get(i) == 0) return null;    // 到达文件边界
 
 
 
         // 不跨越buffer
-        if (i < mapBuf.capacity()) {    // i 此时指向 '\n'
+        if (i < mapBuf.capacity()) {    // i 此时指向 '@'
             msgBytes = new byte[i - curOffset];
             int k = 0;
 
             for (int j = curOffset; j < i; j++)
                 msgBytes[k++] = mapBuf.get();
 
-            mapBuf.get();   //让 buffer的position指针跳过'\n'
+            mapBuf.get();   //让 buffer的position指针跳过'@'
 
             if (i+1 == mapBuf.capacity()) { // 已到达当前buffer的末尾
                 bookkeeper.increaseBufIndex();
@@ -159,7 +160,7 @@ public class DefaultPullConsumer implements PullConsumer{
             MappedByteBuffer otherMapBuf = msgFile.getMapBufList().get(otherBufIndex);
 
             int w = otherOffset;
-            for (;  otherMapBuf.get(w) != 0 && otherMapBuf.get(w) != '\n'; w++);
+            for (;  otherMapBuf.get(w) != 0 && otherMapBuf.get(w) != '@'; w++);
             if (otherMapBuf.get(w) == 0)    return null;    //到达边界
 
 
@@ -176,7 +177,7 @@ public class DefaultPullConsumer implements PullConsumer{
             for (int j = otherOffset; j < w; j++)
                 msgBytes[k++] = otherMapBuf.get();
 
-            otherMapBuf.get();  // 让position指针跳过'\n'
+            otherMapBuf.get();  // 让position指针跳过'@'
 
             // 更新buffer内偏移量
             bookkeeper.setOffset(w+1);
@@ -235,18 +236,18 @@ public class DefaultPullConsumer implements PullConsumer{
 
         if (mapBuf.get(i) == 0) return null;
         try {
-            for(; mapBuf.get(i) != '\n'; i++);  // 此时i指向 '\n'
+            for(; mapBuf.get(i) != '@'; i++);  // 此时i指向 '@'
         } catch (IndexOutOfBoundsException e) {
             System.out.println("i: " + i);
         }
 
-        //for(; mapBuf.get(i) != '\n'; i++);  // 此时i指向 '\n'
+        //for(; mapBuf.get(i) != '@'; i++);  // 此时i指向 '@'
         msgBytes = new byte[i-curOffset];
 
         int k = 0;
         for (int j = curOffset; j < i; j++)
             msgBytes[k++] = mapBuf.get();
-        mapBuf.get();   // 跳过'\n'
+        mapBuf.get();   // 跳过'@'
         bookkeeper.setOffset(i+1);
         if (mapBuf.get(i+1) == 0)  bookkeeper.increaseBufIndex();
 
@@ -258,7 +259,7 @@ public class DefaultPullConsumer implements PullConsumer{
         Bookkeeper bookkeeper = consumeRecord.get(bucket);
         int curOffset = bookkeeper.getCurOffset();
         int i = curOffset;
-        for(; i < mapBuf.capacity() && mapBuf.get(i) != '\n'; i++);
+        for(; i < mapBuf.capacity() && mapBuf.get(i) != '@'; i++);
         if (i >= mapBuf.capacity()) {    // 跨越buffer
             bookkeeper.increaseBufIndex();
             bookkeeper.setOffset(0);
@@ -267,7 +268,7 @@ public class DefaultPullConsumer implements PullConsumer{
             MappedByteBuffer otherMapBuf = messageFileMap.get(bucket).getMapBufList().get(otherBufIndex);
             int w = otherOffset;
 
-            for(; otherMapBuf.get(w) != '\n'; w++);
+            for(; otherMapBuf.get(w) != '@'; w++);
             int firstLen = i - curOffset;
             int secondLen = w - otherOffset;
             msgBytes = new byte[firstLen+secondLen];
@@ -281,7 +282,7 @@ public class DefaultPullConsumer implements PullConsumer{
             for(int j = otherOffset; j < w; j++)
                 msgBytes[k++] = otherMapBuf.get();
 
-            otherMapBuf.get();   // position跳过'\n'
+            otherMapBuf.get();   // position跳过'@'
 
             bookkeeper.setOffset(w+1);  // 更新buffer内偏移量
         }
@@ -327,7 +328,7 @@ public class DefaultPullConsumer implements PullConsumer{
         j = ++i; // 跳过","
 
         // 获取body
-        for (; i < msgBytes.length && msgBytes[i] != '\n'; i++);
+        for (; i < msgBytes.length && msgBytes[i] != '*'; i++);
         byte[] body = Arrays.copyOfRange(msgBytes, j, i);
 
         // 组装

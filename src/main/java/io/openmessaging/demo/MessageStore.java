@@ -40,7 +40,7 @@ public class MessageStore {
     public  void finishCount() {    //TODO: 同步关键字待删除
         int cnt = finishCnt.incrementAndGet();
         if (cnt == numOfProducer.get()) {
-            // 通知所有线程清空容器和队列
+            // 通知所有线程清空容器和队列    由最后一个线程完成
             for(String bucket: writerTable.keySet()) {
                 writerTable.get(bucket).dump();
             }
@@ -49,6 +49,7 @@ public class MessageStore {
 
     }
 
+    /*
     public synchronized void putMessage(Message message) {  //去掉同步关键字出错
         try {
             String queueOrTopic = message.headers().getString(MessageHeader.QUEUE);
@@ -58,16 +59,6 @@ public class MessageStore {
                 throw new Exception("Queue or Topic is empty");
 
 
-            /*
-            if (mqTable.get(queueOrTopic) == null) {
-                mqTable.put(queueOrTopic, new LinkedBlockingQueue(MQ_CAPACITY));
-               // mqTable.put(queueOrTopic, new LinkedBlockingDeque());
-                BlockingQueue<Message> mq = mqTable.get(queueOrTopic);
-                new  Thread(new MessageWriter(properties, queueOrTopic, mq)).start();
-            }
-
-            mqTable.get(queueOrTopic).put(message);
-            */
 
             if (writerTable.get(queueOrTopic) == null) {    // TODO 这里有隐患
                 writerTable.put(queueOrTopic, new MessageWriter(properties, queueOrTopic));
@@ -82,6 +73,34 @@ public class MessageStore {
             System.out.println("Queue or Topic is empty");
         }
 
+
+    }
+    */
+
+    public synchronized  void putMessage(Message message) { // 同步关键字不能去
+        try {
+            String queueOrTopic = message.headers().getString(MessageHeader.QUEUE);
+            if (queueOrTopic == null)
+                queueOrTopic = message.headers().getString(MessageHeader.TOPIC);
+            if (queueOrTopic == null || queueOrTopic.length() == 0)
+                throw new Exception("Queue or Topic is empty");
+
+
+
+            if (writerTable.get(queueOrTopic) == null) {    // TODO 这里有隐患
+                writerTable.put(queueOrTopic, new MessageWriter(properties, queueOrTopic));
+                synchronized (Thread.class) {
+                    new Thread(writerTable.get(queueOrTopic)).start();
+                }
+            }
+            writerTable.get(queueOrTopic).addMessage(message);
+
+
+        } catch(InterruptedException e) {
+            e.printStackTrace();
+        } catch(Exception e) {
+            System.out.println("Queue or Topic is empty");
+        }
 
     }
 }
