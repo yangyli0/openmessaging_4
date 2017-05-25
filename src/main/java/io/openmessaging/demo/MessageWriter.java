@@ -165,9 +165,14 @@ public class MessageWriter implements Runnable {
         if (name.equals("property") || name.equals("header")) {
             if (jarCursor + component.length > BUFFER_SIZE) {
                 // 第一部分
+                /*
                 int k = 0;
                 for (; jarCursor < BUFFER_SIZE;)
                     bytesJar[jarCursor++] = component[k++];
+                    */
+                int k = BUFFER_SIZE - jarCursor;
+                System.arraycopy(component, 0, bytesJar, jarCursor, k);
+                jarCursor += k;
                 try {
                     mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
                 } catch (IOException e) {
@@ -180,12 +185,20 @@ public class MessageWriter implements Runnable {
                 jarCursor = 0;
 
                 // 第二部分
+                /*
                 for(; k < component.length;)
                     bytesJar[jarCursor++] = component[k++];
+                    */
+                System.arraycopy(component, k, bytesJar, jarCursor, component.length-k);
+                jarCursor += component.length-k;
             } else{
+                /*
                 int k = 0;
                 for (; k < component.length; )
                     bytesJar[jarCursor++] = component[k++];
+                */
+                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+                jarCursor += component.length;
 
             }
         }
@@ -193,9 +206,14 @@ public class MessageWriter implements Runnable {
         else {
 
             if (jarCursor + component.length + 1 > BUFFER_SIZE) {
+                /*
                 int k = 0;
                 for (; jarCursor < BUFFER_SIZE;)
                     bytesJar[jarCursor++] = component[k++];
+                */
+                int k = BUFFER_SIZE - jarCursor;
+                System.arraycopy(component, 0, bytesJar, jarCursor, k);
+                jarCursor += k;
                 try {
                     mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
                 } catch (IOException e) { e.printStackTrace(); }
@@ -206,14 +224,22 @@ public class MessageWriter implements Runnable {
                 fileCursor += BUFFER_SIZE;
                 jarCursor = 0;
 
+                /*
                 for (; k < component.length;)
                     bytesJar[jarCursor++] = component[k++];
+                */
+                System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
+                jarCursor += component.length - k;
 
                 bytesJar[jarCursor++] = (byte)('\n');   // 分隔符
             } else {
+                /*
                 int k = 0;
                 for (; k < component.length;)
                     bytesJar[jarCursor++] = component[k++];
+                */
+                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+                jarCursor += component.length;
                 bytesJar[jarCursor++] = (byte)('\n');   // 分隔符
             }
         }
