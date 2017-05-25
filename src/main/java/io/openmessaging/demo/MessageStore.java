@@ -80,7 +80,7 @@ public class MessageStore {
     }
     */
 
-    public synchronized  void putMessage(Message message) { // 同步关键字不能去
+    public  synchronized void putMessage(Message message) { // 同步关键字不能去
         try {
             String queueOrTopic = message.headers().getString(MessageHeader.QUEUE);
             if (queueOrTopic == null)
@@ -92,9 +92,12 @@ public class MessageStore {
 
             if (writerTable.get(queueOrTopic) == null) {    // TODO 这里有隐患
                 writerTable.put(queueOrTopic, new MessageWriter(properties, queueOrTopic));
+                /*
                 synchronized (Thread.class) {
                     new Thread(writerTable.get(queueOrTopic)).start();
                 }
+                */
+                new Thread(writerTable.get(queueOrTopic)).start();
             }
             writerTable.get(queueOrTopic).addMessage(message);
 
