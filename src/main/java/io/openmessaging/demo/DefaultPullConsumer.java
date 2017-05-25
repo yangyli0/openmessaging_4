@@ -1,6 +1,6 @@
 package io.openmessaging.demo;
 
-import com.sun.javafx.collections.MappingChange;
+
 import io.openmessaging.KeyValue;
 import io.openmessaging.Message;
 import io.openmessaging.MessageHeader;
