@@ -37,11 +37,14 @@ public class MessageStore {
         this.properties = properties;
     }
 
-    public  void finishCount() {    //TODO: 同步关键字待删除
+    public  synchronized void finishCount() {    //TODO: 同步关键字待删除
         int cnt = finishCnt.incrementAndGet();
         if (cnt == numOfProducer.get()) {
             // 通知所有线程清空容器和队列    由最后一个线程完成
+            DefaultMessageFactory messageFactory = new DefaultMessageFactory();
             for(String bucket: writerTable.keySet()) {
+                Message msg = messageFactory.createBytesMessageToQueue("end", "end".getBytes());
+                writerTable.get(bucket).addMessage(msg);
                 writerTable.get(bucket).dump();
             }
 

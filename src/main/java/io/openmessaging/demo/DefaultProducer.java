@@ -25,6 +25,7 @@ public class DefaultProducer implements Producer {
 
     public void flush() {
         // 清空队列和缸里的消息, 所有线程都会调用
+        //send(createBytesMessageToTopic("end", "end".getBytes()));
         messageStore.finishCount();
 
     }
