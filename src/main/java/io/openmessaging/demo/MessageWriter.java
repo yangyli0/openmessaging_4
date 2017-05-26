@@ -183,7 +183,7 @@ public class MessageWriter implements Runnable {
             //mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);   // TODO 待删除
             while (true) {
                 BytesMessage message = (BytesMessage)mq.take();
-                if (message.headers().getString(MessageHeader.QUEUE).equals("")) {
+                if (new String(message.getBody()).equals("")) {
                     break;
                 }
 
