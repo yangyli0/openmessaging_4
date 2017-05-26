@@ -20,7 +20,8 @@ public class DefaultPullConsumer implements PullConsumer{
     private int curBucket = 0;
 
     private ConcurrentHashMap<String, MessageFile> messageFileMap = null;
-    private ConcurrentHashMap<String, Bookkeeper> consumeRecord = null;
+   // private ConcurrentHashMap<String, Bookkeeper> consumeRecord = null;
+    private ConcurrentHashMap<String, Integer> consumeRecord = null;
 
 
     public DefaultPullConsumer(KeyValue properties) {
@@ -52,17 +53,20 @@ public class DefaultPullConsumer implements PullConsumer{
         if (messageFileMap.get(bucket) == null)
             messageFileMap.put(bucket, new MessageFile(properties, bucket));
         if (consumeRecord.get(bucket) == null)
-            consumeRecord.put(bucket, new Bookkeeper());
+            consumeRecord.put(bucket, 0);
 
         MessageFile msgFile = messageFileMap.get(bucket);
-        Bookkeeper bookkeeper = consumeRecord.get(bucket);
-        int curBufIndex = bookkeeper.getCurBufIndex();
+        //Bookkeeper bookkeeper = consumeRecord.get(bucket);
+        //int curBufIndex = bookkeeper.getCurBufIndex();
+        int curBufIndex = consumeRecord.get(bucket);
         MappedByteBuffer mapBuf = msgFile.getMapBufList().get(curBufIndex);
 
         if (mapBuf.position() == mapBuf.capacity()) {
-            bookkeeper.increaseBufIndex();
-            curBufIndex = bookkeeper.getCurBufIndex();
-            if (curBufIndex >= msgFile.getMapBufList().size())  return null;
+           // bookkeeper.increaseBufIndex();
+            if (++curBufIndex >= msgFile.getMapBufList().size()) return null;
+            consumeRecord.put(bucket, curBufIndex);
+            //curBufIndex = bookkeeper.getCurBufIndex();
+            //if (curBufIndex >= msgFile.getMapBufList().size())  return null;
             mapBuf = msgFile.getMapBufList().get(curBufIndex);
         }
 
@@ -71,8 +75,10 @@ public class DefaultPullConsumer implements PullConsumer{
         for (; i < mapBuf.capacity() && mapBuf.get(i) != 10; i++);
 
         if (i >= mapBuf.capacity()) {   // 跨越两个buffer
-            bookkeeper.increaseBufIndex();  // 不用考虑越界
+            //bookkeeper.increaseBufIndex();  // 不用考虑越界
             int otherBufIndex = curBufIndex + 1;
+
+            consumeRecord.put(bucket, ++curBufIndex);
             MappedByteBuffer otherMapBuf = msgFile.getMapBufList().get(otherBufIndex);
             int w = otherMapBuf.position();
             for(; otherMapBuf.get(w) != 10; w++);
