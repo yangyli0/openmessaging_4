@@ -5,8 +5,10 @@ import io.openmessaging.Message;
 import io.openmessaging.MessageHeader;
 import io.openmessaging.PullConsumer;
 
+import java.nio.BufferUnderflowException;
 import java.nio.MappedByteBuffer;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by lee on 5/16/17.
@@ -17,12 +19,14 @@ public class DefaultPullConsumer implements PullConsumer{
     private List<String> bucketList = new ArrayList<>();
     private int curBucket = 0;
 
-    private Map<String, MessageFile> messageFileMap = null;
-    private Map<String, Bookkeeper> consumeRecord = null;
+    private ConcurrentHashMap<String, MessageFile> messageFileMap = null;
+    private ConcurrentHashMap<String, Bookkeeper> consumeRecord = null;
 
 
     public DefaultPullConsumer(KeyValue properties) {
         this.properties = properties;
+       // messageFileMap = new ConcurrentHashMap<>();
+       // consumeRecord = new ConcurrentHashMap<>();
 
     }
 
@@ -42,7 +46,60 @@ public class DefaultPullConsumer implements PullConsumer{
         return null;
     }
 
-    public Message pullMessage(String bucket) {
+
+    public  Message pullMessage(String bucket) {
+        Message message = null;
+        if (messageFileMap.get(bucket) == null)
+            messageFileMap.put(bucket, new MessageFile(properties, bucket));
+        if (consumeRecord.get(bucket) == null)
+            consumeRecord.put(bucket, new Bookkeeper());
+
+        MessageFile msgFile = messageFileMap.get(bucket);
+        Bookkeeper bookkeeper = consumeRecord.get(bucket);
+        int curBufIndex = bookkeeper.getCurBufIndex();
+        MappedByteBuffer mapBuf = msgFile.getMapBufList().get(curBufIndex);
+
+        if (mapBuf.position() == mapBuf.capacity()) {
+            bookkeeper.increaseBufIndex();
+            curBufIndex = bookkeeper.getCurBufIndex();
+            if (curBufIndex >= msgFile.getMapBufList().size())  return null;
+            mapBuf = msgFile.getMapBufList().get(curBufIndex);
+        }
+
+        byte[] msgBytes = null;
+        int i = mapBuf.position();
+        for (; i < mapBuf.capacity() && mapBuf.get(i) != 10; i++);
+
+        if (i >= mapBuf.capacity()) {   // 跨越两个buffer
+            bookkeeper.increaseBufIndex();  // 不用考虑越界
+            int otherBufIndex = curBufIndex + 1;
+            MappedByteBuffer otherMapBuf = msgFile.getMapBufList().get(otherBufIndex);
+            int w = otherMapBuf.position();
+            for(; otherMapBuf.get(w) != 10; w++);
+            int firstLen = i - mapBuf.position();
+            int secondLen = w;  // 省去－０
+            msgBytes = new byte[firstLen + secondLen];
+
+            mapBuf.get(msgBytes, 0, firstLen);
+            otherMapBuf.get(msgBytes, firstLen, secondLen);
+
+            otherMapBuf.get();  //跳过'\n'
+        }
+        else {
+            msgBytes = new byte[i - mapBuf.position()];
+            mapBuf.get(msgBytes, 0, i-mapBuf.position());
+            mapBuf.get();   // 跳过'\n'
+        }
+
+
+        return assemble(msgBytes);
+    }
+
+
+
+
+    /*
+    public  synchronized Message pullMessage(String bucket) {
         Message message = null;
         if (messageFileMap.get(bucket) == null)
             messageFileMap.put(bucket, new MessageFile(properties, bucket));
@@ -61,6 +118,7 @@ public class DefaultPullConsumer implements PullConsumer{
             bookkeeper.increaseBufIndex();
             curBufIndex = bookkeeper.getCurBufIndex();
             if (curBufIndex >= msgFile.getMapBufList().size()) return null;
+            mapBuf = msgFile.getMapBufList().get(curBufIndex);
             curOffset = 0;
         }
 
@@ -80,6 +138,8 @@ public class DefaultPullConsumer implements PullConsumer{
             int firstLen = i - curOffset;
             int secondLen = w;
             msgBytes = new byte[firstLen + secondLen];
+
+
             int k = 0;
             // 填入第一部分
             for(int j = curOffset; j < i; j++)
@@ -89,22 +149,29 @@ public class DefaultPullConsumer implements PullConsumer{
             // 填入第二部分
             for(int j = 0; j < w; j++)
                 msgBytes[k++] = otherMapBuf.get();
+
+
+
             otherMapBuf.get();  // 跳过'\n'
             bookkeeper.setOffset(w+1);
         }
          else {
             msgBytes = new byte[i - curOffset];
+
             int k = 0;
             for (int j = curOffset; j < i; j++)
                 msgBytes[k++] = mapBuf.get();
-            mapBuf.get();   // 跳过'\n'
 
+            //mapBuf.get(msgBytes, 0, i-curOffset);
+            mapBuf.get();   // 跳过'\n'
             bookkeeper.setOffset(i+1);
         }
-
         return assemble(msgBytes);
 
     }
+    */
+
+
 
     /*
     public Message pullMessage(String bucket) {
@@ -482,8 +549,8 @@ public class DefaultPullConsumer implements PullConsumer{
         bucketList.add(queueName);
 
         // 初始化
-        messageFileMap = new HashMap<>(bucketList.size());
-        consumeRecord = new HashMap<>(bucketList.size());
+        messageFileMap = new ConcurrentHashMap<>(bucketList.size());
+        consumeRecord = new ConcurrentHashMap<>(bucketList.size());
 
 
     }
