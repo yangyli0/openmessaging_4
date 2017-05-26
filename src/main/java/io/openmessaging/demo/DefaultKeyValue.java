@@ -87,6 +87,7 @@ public class DefaultKeyValue implements KeyValue {
     }
 
     public String getValue(String key) {
+        /*
         if (isInt(key)) {
             int val = getInt(key);
             return "i" + val;
@@ -103,6 +104,8 @@ public class DefaultKeyValue implements KeyValue {
             String val = getString(key);
             return "s" + val;
         }
+        */
+        return kvs.get(key)+"";
 
     }
 }

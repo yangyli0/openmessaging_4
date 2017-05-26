@@ -16,7 +16,7 @@ public class MessageFile {
     private KeyValue properties;
     private String fileName;
 
-    private final int BUFFER_SIZE = 128 * 1024 * 1024;
+    private final int BUFFER_SIZE =  1024 * 1024;
     private List<MappedByteBuffer> mapBufList = new ArrayList<>();
 
     public MessageFile(KeyValue properties, String fileName) {
