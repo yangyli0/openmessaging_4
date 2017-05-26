@@ -80,7 +80,7 @@ public class MessageStore {
     }
     */
 
-    public  synchronized void putMessage(Message message) { // 同步关键字不能去
+    public  void putMessage(Message message) { // 同步关键字不能去
         try {
             String queueOrTopic = message.headers().getString(MessageHeader.QUEUE);
             if (queueOrTopic == null)
@@ -89,18 +89,21 @@ public class MessageStore {
                 throw new Exception("Queue or Topic is empty");
 
 
-
-            if (writerTable.get(queueOrTopic) == null) {    // TODO 这里有隐患
-                writerTable.put(queueOrTopic, new MessageWriter(properties, queueOrTopic));
-                /*
-                synchronized (Thread.class) {
+            synchronized (this) {
+                if (writerTable.get(queueOrTopic) == null) {    // TODO 这里有隐患
+                    writerTable.put(queueOrTopic, new MessageWriter(properties, queueOrTopic));
                     new Thread(writerTable.get(queueOrTopic)).start();
                 }
-                */
+            }
+
+            /*
+            if (writerTable.get(queueOrTopic) == null) {    // TODO 这里有隐患
+                writerTable.put(queueOrTopic, new MessageWriter(properties, queueOrTopic));
                 new Thread(writerTable.get(queueOrTopic)).start();
             }
-            writerTable.get(queueOrTopic).addMessage(message);
 
+            writerTable.get(queueOrTopic).addMessage(message);
+            */
 
         } catch(InterruptedException e) {
             e.printStackTrace();
