@@ -26,9 +26,6 @@ public class DefaultPullConsumer implements PullConsumer{
 
     public DefaultPullConsumer(KeyValue properties) {
         this.properties = properties;
-       // messageFileMap = new ConcurrentHashMap<>();
-       // consumeRecord = new ConcurrentHashMap<>();
-
     }
 
     @Override public KeyValue properties() { return properties; }
@@ -100,6 +97,45 @@ public class DefaultPullConsumer implements PullConsumer{
 
         return assemble(msgBytes);
     }
+
+
+    public Message assemble(byte[] msgBytes) {
+        int i, j;
+        // 获取property
+
+        DefaultKeyValue property = new DefaultKeyValue();
+        for (i = 0; i < msgBytes.length && msgBytes[i] != ','; i++);
+        byte[] propertyBytes = Arrays.copyOfRange(msgBytes, 0, i);  // [start, end)
+        insertKVs(propertyBytes, property);
+        j = ++i; // 跳过","
+
+        // 获取headers
+        DefaultKeyValue header = new DefaultKeyValue();
+        for (; i < msgBytes.length && msgBytes[i] != ','; i++);
+        byte[] headerBytes = Arrays.copyOfRange(msgBytes, j, i);
+        insertKVs(headerBytes, header);
+        j = ++i; // 跳过","
+
+        // 获取body
+        for (; i < msgBytes.length && msgBytes[i] != '\n'; i++);
+        byte[] body = Arrays.copyOfRange(msgBytes, j, i);
+
+        String queueOrTopic = header.getString(MessageHeader.TOPIC);
+        DefaultBytesMessage message = null;
+        DefaultMessageFactory messageFactory = new DefaultMessageFactory();
+        if (queueOrTopic != null)
+            message = (DefaultBytesMessage) messageFactory.createBytesMessageToTopic(queueOrTopic, body);
+        else
+            message = (DefaultBytesMessage) messageFactory.createBytesMessageToQueue(queueOrTopic, body);
+
+        message.setHeaders(header);
+        message.setProperties(property);
+
+        return message;
+
+    }
+
+
 
 
 
@@ -183,13 +219,14 @@ public class DefaultPullConsumer implements PullConsumer{
 
 
 
-
+    /*
 
     public Message assemble(byte[] msgBytes) {
         DefaultMessageFactory messageFactory = new DefaultMessageFactory();
         Message message = null;
         int i, j;
         // 获取property
+        //KeyValue property = message.properties();
         DefaultKeyValue property = new DefaultKeyValue();
         for (i = 0; i < msgBytes.length && msgBytes[i] != ','; i++);
         byte[] propertyBytes = Arrays.copyOfRange(msgBytes, 0, i);  // [start, end)
@@ -216,8 +253,8 @@ public class DefaultPullConsumer implements PullConsumer{
 
         // put property
         for (String key: property.keySet()) {
-            message.putProperties(key, property.getString(key));
-            /*
+           // message.putProperties(key, property.getString(key));
+
             if (header.isInt(key))
                 message.putProperties(key, property.getInt(key));
             else if (header.isDouble(key))
@@ -226,14 +263,14 @@ public class DefaultPullConsumer implements PullConsumer{
                 message.putProperties(key, property.getLong(key));
             else
                 message.putProperties(key, property.getString(key));
-            */
+
         }
 
         // put headers
         for (String key: header.keySet()) {
-            //header.put(key, property.getString(key));
-            message.putHeaders(key, header.getString(key));
-            /*
+
+            //message.putHeaders(key, header.getString(key));
+
             if (header.isInt(key))
                 message.putHeaders(key, header.getInt(key));
             else if (header.isDouble(key))
@@ -242,12 +279,13 @@ public class DefaultPullConsumer implements PullConsumer{
                 message.putHeaders(key, header.getLong(key));
             else
                 message.putHeaders(key, header.getString(key));
-            */
+
         }
 
         return message;
-
     }
+    */
+
 
     public void insertKVs(byte[] kvBytes, KeyValue map) {
         String kvStr = new String(kvBytes);
@@ -256,8 +294,6 @@ public class DefaultPullConsumer implements PullConsumer{
 
             String[] tuple = kv.split("#");
 
-            map.put(tuple[0], tuple[1]);
-            /*
             if(tuple[1].startsWith("i"))
                 map.put(tuple[0], Integer.parseInt(tuple[1].substring(1)));
             else if(tuple[1].startsWith("d"))
@@ -266,17 +302,11 @@ public class DefaultPullConsumer implements PullConsumer{
                 map.put(tuple[0], Long.parseLong(tuple[1].substring(1)));
             else
                 map.put(tuple[0], tuple[1].substring(1));
-            */
-
-
-
-
 
         }
 
-
-
     }
+
 
     @Override public Message poll(KeyValue properties) { throw new UnsupportedOperationException("Unsupported"); }
 

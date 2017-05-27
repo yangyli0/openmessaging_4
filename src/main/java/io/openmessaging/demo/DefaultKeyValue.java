@@ -11,6 +11,8 @@ import java.util.Set;
  */
 public class DefaultKeyValue implements KeyValue {
     private final Map<String, Object> kvs = new HashMap<>();
+
+
     @Override
     public KeyValue put(String key, int value) {
         kvs.put(key, value);
@@ -35,6 +37,8 @@ public class DefaultKeyValue implements KeyValue {
         return this;
     }
 
+
+
     @Override
     public int getInt(String key) {
         return (Integer)kvs.getOrDefault(key, 0);
@@ -54,6 +58,58 @@ public class DefaultKeyValue implements KeyValue {
     public String getString(String key) {
         return (String)kvs.getOrDefault(key, null);
     }
+
+
+     /*
+    @Override
+    public KeyValue put(String key, int value) {
+        kvs.put(key, "i"+value);
+        return this;
+    }
+
+    @Override
+    public KeyValue put(String key, long value) {
+        kvs.put(key, "l"+value);
+        return this;
+    }
+
+    @Override
+    public KeyValue put(String key, double value) {
+        kvs.put(key, "d"+value);
+        return this;
+    }
+    @Override
+    public KeyValue put(String key, String value) {
+        kvs.put(key, "s"+value);
+        return this;
+    }
+    */
+
+
+    /*
+    @Override
+    public int getInt(String key) {
+        String realVal = ((String)kvs.get(key)).substring(1);
+        return Integer.parseInt(realVal);
+    }
+
+    @Override
+    public long getLong(String key) {
+        String realVal = ((String)kvs.get(key)).substring(1);
+        return Long.parseLong(realVal);
+    }
+
+    @Override
+    public double getDouble(String key) {
+        String realVal = ((String)kvs.get(key)).substring(1);
+        return Double.parseDouble(realVal);
+    }
+    @Override
+    public String getString(String key) {
+        String realVal = ((String)kvs.get(key)).substring(1);
+        return realVal;
+    }
+    */
 
     @Override
     public Set<String> keySet() {
@@ -87,25 +143,8 @@ public class DefaultKeyValue implements KeyValue {
     }
 
     public String getValue(String key) {
-        /*
-        if (isInt(key)) {
-            int val = getInt(key);
-            return "i" + val;
-        }
-        else if (isLong(key)) {
-            long val = getLong(key);
-            return "l" + val;
-        }
-        else if (isDouble(key)) {
-            double val = getDouble(key);
-            return "d" + val;
-        }
-        else {
-            String val = getString(key);
-            return "s" + val;
-        }
-        */
-        return kvs.get(key)+"";
+
+        return (String)kvs.get(key);
 
     }
 }

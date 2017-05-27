@@ -6,7 +6,7 @@ import io.openmessaging.Message;
 import io.openmessaging.MessageHeader;
 
 
-import java.io.File;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -24,7 +24,8 @@ public class MessageWriter implements Runnable {
     String fileName;
     BlockingQueue<Message> mq;
     private int BUFFER_SIZE =   16 * 1024 * 1024;    //TODO:待调整
-    private int MQ_CAPACITY = 100000;    //TODO: 待调整
+    //private int MQ_CAPACITY = 10000;    //TODO: 待调整
+    private int MQ_CAPACITY = 15000;
     private byte[] bytesJar;  // 缓存消息
     private int jarCursor = 0; // bytesJar中游标当前位置 数组下标不能超过最大整数
     private long fileCursor = 0;    // 文件中游标的当前位置
@@ -175,7 +176,7 @@ public class MessageWriter implements Runnable {
     }
 
     public void run() {
-        String absPath = properties.getString("STORE_PATH")+ "/" + fileName;
+        String absPath = properties.getString("STORE_PATH")+ "/" + fileName.substring(1);
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(absPath, "rw");
@@ -198,48 +199,7 @@ public class MessageWriter implements Runnable {
 
             }
 
-            /*
-            while(!sendOver);
-            if (sendOver) {
 
-                while (!mq.isEmpty()) {  // 这时候可以不要考虑线程安全了
-                    BytesMessage  message = (BytesMessage)mq.remove();
-                    if (new String(message.getBody()).equals("")) {
-                       // System.out.println();
-                        break;
-                    }
-                    byte[] propertyBytes = getKeyValueBytes(message.properties());
-                    byte[] headerBytes = getKeyValueBytes(message.headers());
-                    byte[] body = message.getBody();
-
-
-                    // 注意填充的先后顺序
-                    fill(propertyBytes, "property");
-                    fill(headerBytes, "header");
-                    fill(body, "body");
-
-                }
-
-
-
-                // 倒空jar
-
-                if (jarCursor > 0) {
-                    //mapBuf.put(bytesJar, 0, jarCursor);
-                    try {
-                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, jarCursor);
-                        mapBuf.put(bytesJar, 0, jarCursor);
-                    } catch (IOException e) { e.printStackTrace();}
-                    finally {
-                        if (fc != null) {
-                            fc.close();
-                        }
-                    }
-
-                }
-
-            }
-            */
             while (!mq.isEmpty()) {  // 这时候可以不要考虑线程安全了
                 BytesMessage  message = (BytesMessage)mq.remove();
                 if (new String(message.getBody()).equals("")) {

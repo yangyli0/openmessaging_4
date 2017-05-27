@@ -8,9 +8,12 @@ import io.openmessaging.Message;
  * Created by lee on 5/16/17.
  */
 public class DefaultBytesMessage implements BytesMessage {
+
     private KeyValue headers = new DefaultKeyValue();
-    private KeyValue properties;
     private byte[] body;
+    private KeyValue properties;
+
+
 
     public DefaultBytesMessage(byte[] body) {
         this.body = body;
@@ -33,46 +36,54 @@ public class DefaultBytesMessage implements BytesMessage {
     }
 
     @Override public Message putHeaders(String key, int value) {
-        headers.put(key, value);
+        headers.put(key, "i"+value);
         return this;
     }
 
     @Override public Message putHeaders(String key, long value) {
-        headers.put(key, value);
+        headers.put(key, "l"+value);
         return this;
     }
 
     @Override public Message putHeaders(String key, double value) {
-        headers.put(key, value);
+        headers.put(key, "d"+value);
         return this;
     }
 
     @Override public Message putHeaders(String key, String value) {
-        headers.put(key, value);
+        headers.put(key, "s"+value);
         return this;
     }
 
     @Override public Message putProperties(String key, int value) {
         if (properties == null) properties = new DefaultKeyValue();
-        properties.put(key, value);
+        properties.put(key, "i"+value);
         return this;
     }
 
     @Override public Message putProperties(String key, long value) {
         if (properties == null) properties = new DefaultKeyValue();
-        properties.put(key, value);
+        properties.put(key, "l"+value);
         return this;
     }
 
     @Override public Message putProperties(String key, double value) {
         if (properties == null) properties = new DefaultKeyValue();
-        properties.put(key, value);
+        properties.put(key, "d"+value);
         return this;
     }
 
     @Override public Message putProperties(String key, String value) {
         if (properties == null) properties = new DefaultKeyValue();
-        properties.put(key, value);
+        properties.put(key, "s"+value);
         return this;
+    }
+
+    public void setHeaders(DefaultKeyValue headers) {
+        this.headers = headers;
+    }
+
+    public void setProperties(DefaultKeyValue properties) {
+        this.properties = properties;
     }
 }
