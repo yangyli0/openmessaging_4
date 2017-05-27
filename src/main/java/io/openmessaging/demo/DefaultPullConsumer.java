@@ -47,9 +47,9 @@ public class DefaultPullConsumer implements PullConsumer{
 
     public  Message pullMessage(String bucket) {
         Message message = null;
-        if (messageFileMap.get(bucket) == null)
+        if (!messageFileMap.containsKey(bucket))
             messageFileMap.put(bucket, new MessageFile(properties, bucket));
-        if (consumeRecord.get(bucket) == null)
+        if (!consumeRecord.containsKey(bucket))
             consumeRecord.put(bucket, 0);
 
         MessageFile msgFile = messageFileMap.get(bucket);

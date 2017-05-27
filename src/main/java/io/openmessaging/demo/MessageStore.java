@@ -86,7 +86,7 @@ public class MessageStore {
 
 
           //  /*
-            if(writerTable.get(queueOrTopic) == null) {
+            if(!writerTable.containsKey(queueOrTopic)) {
                 synchronized (this) {
                    // System.out.println("aa");
                     MessageWriter messageWriter = writerTable.get(queueOrTopic);
@@ -98,31 +98,6 @@ public class MessageStore {
                 }
            }
 //*/
-
-           /*
-            MessageWriter messageWriter = writerTable.get(queueOrTopic);
-            if (messageWriter == null) {// TODO 这里有隐患
-                synchronized (this) {
-                messageWriter = new MessageWriter(properties, queueOrTopic);
-                writerTable.put(queueOrTopic, messageWriter);
-                    new Thread(messageWriter).start();
-                }
-
-            }
-           */
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             writerTable.get(queueOrTopic).addMessage(message);
 
