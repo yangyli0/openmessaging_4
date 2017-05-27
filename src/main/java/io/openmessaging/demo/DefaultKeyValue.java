@@ -60,56 +60,6 @@ public class DefaultKeyValue implements KeyValue {
     }
 
 
-     /*
-    @Override
-    public KeyValue put(String key, int value) {
-        kvs.put(key, "i"+value);
-        return this;
-    }
-
-    @Override
-    public KeyValue put(String key, long value) {
-        kvs.put(key, "l"+value);
-        return this;
-    }
-
-    @Override
-    public KeyValue put(String key, double value) {
-        kvs.put(key, "d"+value);
-        return this;
-    }
-    @Override
-    public KeyValue put(String key, String value) {
-        kvs.put(key, "s"+value);
-        return this;
-    }
-    */
-
-
-    /*
-    @Override
-    public int getInt(String key) {
-        String realVal = ((String)kvs.get(key)).substring(1);
-        return Integer.parseInt(realVal);
-    }
-
-    @Override
-    public long getLong(String key) {
-        String realVal = ((String)kvs.get(key)).substring(1);
-        return Long.parseLong(realVal);
-    }
-
-    @Override
-    public double getDouble(String key) {
-        String realVal = ((String)kvs.get(key)).substring(1);
-        return Double.parseDouble(realVal);
-    }
-    @Override
-    public String getString(String key) {
-        String realVal = ((String)kvs.get(key)).substring(1);
-        return realVal;
-    }
-    */
 
     @Override
     public Set<String> keySet() {
@@ -143,8 +93,19 @@ public class DefaultKeyValue implements KeyValue {
     }
 
     public String getValue(String key) {
-
         return (String)kvs.get(key);
+    }
 
+    public byte[] getBytes() {
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<String, Object>entry: kvs.entrySet()) {
+            sb.append(entry.getKey());
+            sb.append('#');
+            sb.append(entry.getValue());
+            sb.append('|');
+        }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append(',');
+        return sb.toString().getBytes();
     }
 }

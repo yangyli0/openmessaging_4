@@ -162,6 +162,9 @@ public class MessageWriter implements Runnable {
 
 
     public byte[] getKeyValueBytes(KeyValue map) {
+        return ((DefaultKeyValue)map).getBytes();
+
+        /*
         StringBuilder sb = new StringBuilder();
         DefaultKeyValue kvs = (DefaultKeyValue)map;
         for (String key: kvs.keySet()) {
@@ -173,6 +176,7 @@ public class MessageWriter implements Runnable {
         sb.deleteCharAt(sb.length()-1);
         sb.append(',');
         return sb.toString().getBytes();
+        */
     }
 
     public void run() {
