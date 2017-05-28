@@ -53,22 +53,20 @@ public class DefaultPullConsumer implements PullConsumer{
             consumeRecord.put(bucket, 0);
 
         MessageFile msgFile = messageFileMap.get(bucket);
-        //Bookkeeper bookkeeper = consumeRecord.get(bucket);
-        //int curBufIndex = bookkeeper.getCurBufIndex();
+
         int curBufIndex = consumeRecord.get(bucket);
         MappedByteBuffer mapBuf = msgFile.getMapBufList().get(curBufIndex);
 
         if (mapBuf.position() == mapBuf.capacity()) {
-           // bookkeeper.increaseBufIndex();
             if (++curBufIndex >= msgFile.getMapBufList().size()) return null;
             consumeRecord.put(bucket, curBufIndex);
-            //curBufIndex = bookkeeper.getCurBufIndex();
-            //if (curBufIndex >= msgFile.getMapBufList().size())  return null;
+
             mapBuf = msgFile.getMapBufList().get(curBufIndex);
         }
 
         byte[] msgBytes = null;
         int i = mapBuf.position();
+        if (i < mapBuf.capacity() && mapBuf.get(i) == 0)    return null;
         for (; i < mapBuf.capacity() && mapBuf.get(i) != 10; i++);
 
         if (i >= mapBuf.capacity()) {   // 跨越两个buffer
