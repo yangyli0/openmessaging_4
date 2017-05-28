@@ -203,7 +203,7 @@ public class MessageWriter implements Runnable {
 
             }
 
-
+            /*
             while (!mq.isEmpty()) {  // 这时候可以不要考虑线程安全了
                 BytesMessage  message = (BytesMessage)mq.remove();
                 if (new String(message.getBody()).equals("")) {
@@ -221,6 +221,7 @@ public class MessageWriter implements Runnable {
                 fill(body, "body");
 
             }
+            */
 
 
             if (jarCursor > 0) {
