@@ -23,7 +23,7 @@ public class MessageWriter implements Runnable {
     KeyValue properties;
     String fileName;
     BlockingQueue<Message> mq;
-    private final int BUFFER_SIZE =   1024 * 1024 * 1024;    //TODO:待调整
+    private final int BUFFER_SIZE =   256 * 1024 * 1024;    //TODO:待调整
     private final  int MQ_CAPACITY = 10000;    //TODO: 待调整
     private final int JAR_SIZE = 4 * 1024 * 1024;
 
@@ -178,61 +178,49 @@ public class MessageWriter implements Runnable {
     }
     */
 
-    public void fill(byte[] component, String name) {
-        if (name.equals("header") || name.equals("property")) {
-            if (jarCursor + component.length > JAR_SIZE) {
-                // 复制第一部分
-                int k = JAR_SIZE - jarCursor;
-                System.arraycopy(component, 0, bytesJar, jarCursor, k);
-                // 填入mapBuf
-                if (mapBuf.position() == mapBuf.capacity()) {
-                    try {
-                        fileCursor += BUFFER_SIZE;  //更新jarCursor
-                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+    public void fill(byte[] component) {
+        if (jarCursor + component.length > JAR_SIZE) {
+            // 复制第一部分
+            int k = JAR_SIZE - jarCursor;
+            System.arraycopy(component, 0, bytesJar, jarCursor, k);
+            // 填入mapBuf
+            if (mapBuf.position() == mapBuf.capacity()) {
+                try {
+                    fileCursor += BUFFER_SIZE;  //更新jarCursor
+                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                mapBuf.put(bytesJar);
-                jarCursor = 0;  // 倒空更新jarCursor
+            }
+            mapBuf.put(bytesJar);
+            jarCursor = 0;  // 倒空更新jarCursor
 
-                // 复制第二部分
-                System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
-                jarCursor += component.length -k;   //更新jarCursor;
-            }
-            else {
-                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
-                jarCursor += component.length;  // 更新jarCursor;
-            }
+            // 复制第二部分
+            System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
+            jarCursor += component.length -k;   //更新jarCursor;
         }
         else {
-            if (jarCursor + component.length + 1 > JAR_SIZE) {
-                // 第一部分
-                int k = JAR_SIZE - jarCursor;
-                System.arraycopy(component, 0, bytesJar, jarCursor, k);
-                if (mapBuf.position() == mapBuf.capacity()) {
-                    try {
-                        fileCursor += BUFFER_SIZE;  //
-                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
-                    } catch (IOException e) { e.printStackTrace(); }
-                }
-                mapBuf.put(bytesJar);
-                jarCursor = 0;  //
-
-                // 第二部分
-                if (k < component.length) {
-                    System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
-                    jarCursor += component.length - k;
-                }
-                bytesJar[jarCursor++] = (byte)('\n');   // 添加分隔符
-            }
-
-            else {
-                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
-                jarCursor += component.length; //
-                bytesJar[jarCursor++] = (byte)('\n'); //
-            }
+            System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+            jarCursor += component.length;  // 更新jarCursor;
         }
+
+    }
+
+    public void fill(byte splitor) {
+        if (jarCursor == JAR_SIZE) {
+
+            if (mapBuf.position() == mapBuf.capacity()) {
+                try {
+                    fileCursor += BUFFER_SIZE;
+                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                } catch (IOException e) { e.printStackTrace(); }
+            }
+            mapBuf.put(bytesJar);
+            jarCursor = 0;
+            bytesJar[jarCursor++] = splitor;
+        }
+         else
+             bytesJar[jarCursor++] = splitor;
     }
 
 
@@ -263,10 +251,10 @@ public class MessageWriter implements Runnable {
                 byte[] body = message.getBody();
 
                 // 注意填充的先后顺序
-                fill(propertyBytes, "property");
-                fill(headerBytes, "header");
-                fill(body, "body");
-
+                fill(propertyBytes);
+                fill(headerBytes);
+                fill(body);
+                fill((byte)('\n'));
             }
 
 
