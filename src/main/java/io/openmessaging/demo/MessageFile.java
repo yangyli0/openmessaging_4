@@ -52,9 +52,7 @@ public class MessageFile {
 
     }
 
-    public int getBufSize() {
-        return this.BUFFER_SIZE;
-    }
+
 
 }
 

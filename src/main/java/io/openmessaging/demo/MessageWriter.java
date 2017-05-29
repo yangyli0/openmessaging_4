@@ -6,7 +6,7 @@ import io.openmessaging.Message;
 import io.openmessaging.MessageHeader;
 
 
-
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -23,14 +23,14 @@ public class MessageWriter implements Runnable {
     KeyValue properties;
     String fileName;
     BlockingQueue<Message> mq;
-    private int BUFFER_SIZE =   256 * 1024 * 1024;    //TODO:待调整
-    private int MQ_CAPACITY = 10000;    //TODO: 待调整
-    //private int MQ_CAPACITY = 1000;
+    private final int BUFFER_SIZE =   256 * 1024 * 1024;    //TODO:待调整
+    private final  int MQ_CAPACITY = 10000;    //TODO: 待调整
+    private final int JAR_SIZE = 16 * 1024 * 1024;
 
     private byte[] bytesJar;  // 缓存消息
     private int jarCursor = 0; // bytesJar中游标当前位置 数组下标不能超过最大整数
     private long fileCursor = 0;    // 文件中游标的当前位置
-    private int JAR_SIZE = 4 * 1024 * 1024;
+
 
     private MappedByteBuffer mapBuf = null;
     private FileChannel fc = null;
@@ -42,7 +42,7 @@ public class MessageWriter implements Runnable {
         this.properties = properties;
         this.fileName = fileName;
         mq = new LinkedBlockingQueue<>(MQ_CAPACITY);
-        //bytesJar = new byte[JAR_SIZE];
+        bytesJar = new byte[JAR_SIZE];
 
     }
 
@@ -131,6 +131,7 @@ public class MessageWriter implements Runnable {
     */
 
     //  一次映射一次，一条一条写
+    /*
     public void fill(byte[] component, String name) {
         if (name.equals("property") || name.equals("header")) {
             if (mapBuf.position() + component.length > BUFFER_SIZE) {    // 映射前半段
@@ -172,6 +173,64 @@ public class MessageWriter implements Runnable {
             else {
                 mapBuf.put(component);
                 mapBuf.put((byte)('\n'));
+            }
+        }
+    }
+    */
+
+    public void fill(byte[] component, String name) {
+        if (name.equals("header") || name.equals("property")) {
+            if (jarCursor + component.length > JAR_SIZE) {
+                // 复制第一部分
+                int k = JAR_SIZE - jarCursor;
+                System.arraycopy(component, 0, bytesJar, jarCursor, k);
+                // 填入mapBuf
+                if (mapBuf.position() == mapBuf.capacity()) {
+                    try {
+                        fileCursor += BUFFER_SIZE;  //更新jarCursor
+                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mapBuf.put(bytesJar);
+                jarCursor = 0;  // 倒空更新jarCursor
+
+                // 复制第二部分
+                System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
+                jarCursor += component.length -k;   //更新jarCursor;
+            }
+            else {
+                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+                jarCursor += component.length;  // 更新jarCursor;
+            }
+        }
+        else {
+            if (jarCursor + component.length + 1 > JAR_SIZE) {
+                // 第一部分
+                int k = JAR_SIZE - jarCursor;
+                System.arraycopy(component, 0, bytesJar, jarCursor, k);
+                if (mapBuf.position() == mapBuf.capacity()) {
+                    try {
+                        fileCursor += BUFFER_SIZE;  //
+                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                    } catch (IOException e) { e.printStackTrace(); }
+                }
+                mapBuf.put(bytesJar);
+                jarCursor = 0;  //
+
+                // 第二部分
+                if (k < component.length) {
+                    System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
+                    jarCursor += component.length - k;
+                }
+                bytesJar[jarCursor++] = (byte)('\n');   // 添加分隔符
+            }
+
+            else {
+                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+                jarCursor += component.length; //
+                bytesJar[jarCursor++] = (byte)('\n'); //
             }
         }
     }
@@ -226,6 +285,18 @@ public class MessageWriter implements Runnable {
 
             }
             */
+
+            if (jarCursor > 0) {
+                if (mapBuf.position() == mapBuf.capacity()) {
+                    try {
+                        fileCursor += BUFFER_SIZE;
+                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);   // TODO 待修改
+                    } catch (IOException e) { e.printStackTrace(); }
+
+                   // mapBuf.force();
+                }
+                mapBuf.put(bytesJar, 0, jarCursor);
+            }
 
 
         } catch (IOException e) {
