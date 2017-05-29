@@ -71,7 +71,7 @@ public class DefaultKeyValue implements KeyValue {
         return kvs.containsKey(key);
     }
 
-
+    /*
     public boolean isInt(String key) {
         Object obj = kvs.get(key);
         return (obj instanceof  Integer);
@@ -95,6 +95,7 @@ public class DefaultKeyValue implements KeyValue {
     public String getValue(String key) {
         return (String)kvs.get(key);
     }
+    */
 
     public byte[] getBytes() {
         StringBuilder sb = new StringBuilder();
