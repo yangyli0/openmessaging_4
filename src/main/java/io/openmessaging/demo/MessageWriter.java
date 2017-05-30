@@ -131,9 +131,9 @@ public class MessageWriter implements Runnable {
     */
 
     //  一次映射一次，一条一条写
-    /*
-    public void fill(byte[] component, String name) {
-        if (name.equals("property") || name.equals("header")) {
+
+    public void fill(byte[] component, char flag) {
+        if (flag == 'p' || flag == 'h') {
             if (mapBuf.position() + component.length > BUFFER_SIZE) {    // 映射前半段
                 int k = BUFFER_SIZE - mapBuf.position();
                 mapBuf.put(component, 0, k);
@@ -176,7 +176,8 @@ public class MessageWriter implements Runnable {
             }
         }
     }
-    */
+
+    /*
 
     public void fill(byte[] component) {
         if (jarCursor + component.length > JAR_SIZE) {
@@ -222,6 +223,7 @@ public class MessageWriter implements Runnable {
          else
              bytesJar[jarCursor++] = splitor;
     }
+    */
 
 
 
@@ -251,10 +253,10 @@ public class MessageWriter implements Runnable {
                 byte[] body = message.getBody();
 
                 // 注意填充的先后顺序
-                fill(propertyBytes);
-                fill(headerBytes);
-                fill(body);
-                fill((byte)('\n'));
+                fill(propertyBytes, 'p');
+                fill(headerBytes, 'h');
+                fill(body, 'b');
+                //fill((byte)('\n'));
             }
 
 
@@ -274,6 +276,7 @@ public class MessageWriter implements Runnable {
             }
             */
 
+            /*
             if (jarCursor > 0) {
                 if (mapBuf.position() == mapBuf.capacity()) {
                     try {
@@ -285,6 +288,7 @@ public class MessageWriter implements Runnable {
                 }
                 mapBuf.put(bytesJar, 0, jarCursor);
             }
+            */
 
 
         } catch (IOException e) {
