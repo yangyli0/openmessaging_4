@@ -25,7 +25,7 @@ public class MessageWriter implements Runnable {
     BlockingQueue<Message> mq;
     private final int BUFFER_SIZE =   256 * 1024 * 1024;    //TODO:待调整
     private final  int MQ_CAPACITY = 10000;    //TODO: 待调整
-    private final int JAR_SIZE = 2 * 1024 * 1024;
+    private final int JAR_SIZE = 4 * 1024 * 1024;
 
     private byte[] bytesJar;  // 缓存消息
     private int jarCursor = 0; // bytesJar中游标当前位置 数组下标不能超过最大整数
@@ -132,6 +132,7 @@ public class MessageWriter implements Runnable {
 
     //  一次映射一次，一条一条写
 
+    /*
     public void fill(byte[] component, char flag) {
         if (flag == 'p' || flag == 'h') {
             if (mapBuf.position() + component.length > BUFFER_SIZE) {    // 映射前半段
@@ -176,54 +177,67 @@ public class MessageWriter implements Runnable {
             }
         }
     }
+    */
 
-    /*
+    ///*
 
-    public void fill(byte[] component) {
-        if (jarCursor + component.length > JAR_SIZE) {
-            // 复制第一部分
-            int k = JAR_SIZE - jarCursor;
-            System.arraycopy(component, 0, bytesJar, jarCursor, k);
-            // 填入mapBuf
-            if (mapBuf.position() == mapBuf.capacity()) {
-                try {
-                    fileCursor += BUFFER_SIZE;  //更新jarCursor
-                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
-                } catch (IOException e) {
-                    e.printStackTrace();
+    public  void fill(byte[] component, char ch) {
+        if (ch == 'p' || ch == 'h') {
+            if (jarCursor + component.length > JAR_SIZE) {
+                // 复制第一部分
+                int k = JAR_SIZE - jarCursor;
+                System.arraycopy(component, 0, bytesJar, jarCursor, k);
+                // 填入mapBuf
+                if (mapBuf.position() == mapBuf.capacity()) {
+                    try {
+                        fileCursor += BUFFER_SIZE;  //更新jarCursor
+                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            mapBuf.put(bytesJar);
-            jarCursor = 0;  // 倒空更新jarCursor
+                mapBuf.put(bytesJar);
+                jarCursor = 0;  // 倒空更新jarCursor
 
-            // 复制第二部分
-            System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
-            jarCursor += component.length -k;   //更新jarCursor;
+                // 复制第二部分
+                System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
+                jarCursor += component.length -k;   //更新jarCursor;
+            }
+            else {
+                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+                jarCursor += component.length;  // 更新jarCursor;
+            }
+
         }
         else {
-            System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
-            jarCursor += component.length;  // 更新jarCursor;
-        }
+            if (jarCursor + component.length + 1 > JAR_SIZE) {
+                int k = JAR_SIZE - jarCursor;
+                System.arraycopy(component, 0, bytesJar, jarCursor, k);
+                if (mapBuf.position() == BUFFER_SIZE) {
+                    try {
+                        fileCursor += BUFFER_SIZE;
+                        mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
+                    } catch (IOException e) { e.printStackTrace();}
 
-    }
+                }
+                mapBuf.put(bytesJar);
+                jarCursor = 0;
 
-    public void fill(byte splitor) {
-        if (jarCursor == JAR_SIZE) {
+                if (k < component.length)
+                    System.arraycopy(component, k, bytesJar, jarCursor, component.length - k);
+                jarCursor += component.length - k;
+                bytesJar[jarCursor++] = (byte)('\n');
 
-            if (mapBuf.position() == mapBuf.capacity()) {
-                try {
-                    fileCursor += BUFFER_SIZE;
-                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);
-                } catch (IOException e) { e.printStackTrace(); }
             }
-            mapBuf.put(bytesJar);
-            jarCursor = 0;
-            bytesJar[jarCursor++] = splitor;
+            else {
+                System.arraycopy(component, 0, bytesJar, jarCursor, component.length);
+                jarCursor += component.length;
+                bytesJar[jarCursor++] = (byte)('\n');
+            }
         }
-         else
-             bytesJar[jarCursor++] = splitor;
     }
-    */
+
+    //*/
 
 
 
@@ -260,23 +274,9 @@ public class MessageWriter implements Runnable {
             }
 
 
-            /*
-            if (jarCursor > 0) {
-                //mapBuf.put(bytesJar, 0, jarCursor);
-                try {
-                    mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, jarCursor);
-                    mapBuf.put(bytesJar, 0, jarCursor);
-                } catch (IOException e) { e.printStackTrace();}
-                finally {
-                    if (fc != null) {
-                        fc.close();
-                    }
-                }
 
-            }
-            */
 
-            /*
+            ///*
             if (jarCursor > 0) {
                 if (mapBuf.position() == mapBuf.capacity()) {
                     try {
@@ -288,7 +288,7 @@ public class MessageWriter implements Runnable {
                 }
                 mapBuf.put(bytesJar, 0, jarCursor);
             }
-            */
+            //*/
 
 
         } catch (IOException e) {
