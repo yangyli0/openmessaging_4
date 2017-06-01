@@ -23,8 +23,8 @@ public class MessageWriter implements Runnable {
     KeyValue properties;
     String fileName;
     BlockingQueue<Message> mq;
-    private final int BUFFER_SIZE =   Integer.MAX_VALUE;    //TODO:待调整
-    private final  int MQ_CAPACITY = 10000;    //TODO: 待调整
+    private final int BUFFER_SIZE =  256 * 1024 * 1024;    //TODO:待调整
+    private final  int MQ_CAPACITY = 1000;    //TODO: 待调整
     private final int JAR_SIZE = 4 * 1024 * 1024;
 
     private byte[] bytesJar;  // 缓存消息
@@ -42,7 +42,7 @@ public class MessageWriter implements Runnable {
         this.properties = properties;
         this.fileName = fileName;
         mq = new LinkedBlockingQueue<>(MQ_CAPACITY);
-        bytesJar = new byte[JAR_SIZE];
+        //bytesJar = new byte[JAR_SIZE];
 
     }
 
@@ -132,7 +132,7 @@ public class MessageWriter implements Runnable {
 
     //  一次映射一次，一条一条写
 
-    /*
+    ///*
     public void fill(byte[] component, char flag) {
         if (flag == 'p' || flag == 'h') {
             if (mapBuf.position() + component.length > BUFFER_SIZE) {    // 映射前半段
@@ -166,7 +166,7 @@ public class MessageWriter implements Runnable {
                     e.printStackTrace();
                 }
                 if (k < component.length)   // 是否只需要加入'\n'
-                    mapBuf.put(component, k, component.length);
+                    mapBuf.put(component, k, component.length - k);
 
                 mapBuf.put((byte)('\n'));
             }
@@ -177,9 +177,9 @@ public class MessageWriter implements Runnable {
             }
         }
     }
-    */
+    //*/
 
-    ///*
+    /* 采用容器方式
 
     public  void fill(byte[] component, char ch) {
         if (ch == 'p' || ch == 'h') {
@@ -237,7 +237,7 @@ public class MessageWriter implements Runnable {
         }
     }
 
-    //*/
+    */
 
 
 
@@ -276,7 +276,7 @@ public class MessageWriter implements Runnable {
 
 
 
-            ///*
+            /*
             if (jarCursor > 0) {
                 if (mapBuf.position() == mapBuf.capacity()) {
                     try {
@@ -288,7 +288,9 @@ public class MessageWriter implements Runnable {
                 }
                 mapBuf.put(bytesJar, 0, jarCursor);
             }
-            //*/
+            */
+
+            System.out.printf("%s mapCnt: %d%n",fileName, fileCursor / BUFFER_SIZE + 1);
 
 
         } catch (IOException e) {
