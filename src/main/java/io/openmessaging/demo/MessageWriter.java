@@ -24,7 +24,7 @@ public class MessageWriter implements Runnable {
     String fileName;
     BlockingQueue<Message> mq;
     private final int BUFFER_SIZE =  256 * 1024 * 1024;    //TODO:待调整
-    private final  int MQ_CAPACITY = 12000;    //TODO: 待调整
+    private final  int MQ_CAPACITY = 14000;    //TODO: 待调整
     private final int JAR_SIZE = 4 * 1024 * 1024;
 
     private byte[] bytesJar;  // 缓存消息
@@ -292,7 +292,7 @@ public class MessageWriter implements Runnable {
             }
             */
 
-            System.out.printf("%s mapCnt: %d%n",fileName, fileCursor / BUFFER_SIZE + 1);
+            //System.out.printf("%s mapCnt: %d%n",fileName, fileCursor / BUFFER_SIZE + 1);
 
 
         } catch (IOException e) {
