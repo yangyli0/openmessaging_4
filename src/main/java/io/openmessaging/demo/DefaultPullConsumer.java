@@ -19,9 +19,12 @@ public class DefaultPullConsumer implements PullConsumer{
     private List<String> bucketList = new ArrayList<>();
     private int curBucket = 0;
 
-    private ConcurrentHashMap<String, MessageFile> messageFileMap = null;
+
+    //private ConcurrentHashMap<String, MessageFile> messageFileMap = null;
+    private Map<String, MessageFile> messageFileMap = null;
    // private ConcurrentHashMap<String, Bookkeeper> consumeRecord = null;
-    private ConcurrentHashMap<String, Integer> consumeRecord = null;
+    //private ConcurrentHashMap<String, Integer> consumeRecord = null;
+    private Map<String, Integer> consumeRecord = null;
 
 
     public DefaultPullConsumer(KeyValue properties) {
@@ -308,7 +311,7 @@ public class DefaultPullConsumer implements PullConsumer{
 
     @Override public Message poll(KeyValue properties) { throw new UnsupportedOperationException("Unsupported"); }
 
-    @Override public synchronized void attachQueue(String queueName, Collection<String> topics) {
+    @Override public  void attachQueue(String queueName, Collection<String> topics) {
         if (queue != null && !queue.equals(queueName))
             throw new ClientOMSException("You have already attached to a queue: " + queue);
         queue = queueName;
@@ -317,9 +320,10 @@ public class DefaultPullConsumer implements PullConsumer{
         bucketList.add(queueName);
 
         // 初始化
-        messageFileMap = new ConcurrentHashMap<>(bucketList.size());
-        consumeRecord = new ConcurrentHashMap<>(bucketList.size());
-
+        //messageFileMap = new ConcurrentHashMap<>(bucketList.size());
+        //consumeRecord = new ConcurrentHashMap<>(bucketList.size());
+        messageFileMap = new HashMap<>(bucketList.size());
+        consumeRecord = new HashMap<>(bucketList.size());
 
     }
 

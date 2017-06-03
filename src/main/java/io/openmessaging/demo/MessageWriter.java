@@ -251,9 +251,11 @@ public class MessageWriter implements Runnable {
 
     public void run() {
         String absPath = properties.getString("STORE_PATH")+ "/" + fileName.substring(1);
-        RandomAccessFile raf = null;
+        //RandomAccessFile raf = null;
+        BufferedRandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(absPath, "rw");
+            //raf = new RandomAccessFile(absPath, "rw");
+            raf = new BufferedRandomAccessFile(absPath, "rw");
             fc = raf.getChannel();
             mapBuf = fc.map(FileChannel.MapMode.READ_WRITE, fileCursor, BUFFER_SIZE);   // TODO 待删除
             while (true) {

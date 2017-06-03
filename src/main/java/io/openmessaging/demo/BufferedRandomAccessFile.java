@@ -1,11 +1,11 @@
-package com.util;
+package io.openmessaging.demo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
-import java.util.ResourceBundle;
+
 
 /**
  * Created by iceke on 16/7/17.
