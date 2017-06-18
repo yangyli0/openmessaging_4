@@ -1,11 +1,13 @@
-## 思路一
+## 思路四
+### 生产过程
 1. 每个topic(queue)对应一个文件，一个阻塞队列。
 2. 多个生产者线程将消息按照消息的头部字段投放到相应的队列中。
 3. 每个阻塞队列由一个单独的线程负责从队列里取消息，然后写入由topic(queue)确定的文件名。
 4. 写采用MappedByteBuffer,
    一次映射512M,当映射的Buffer用完后，重新分配新的buffer
 5. 因为消息的"properties"和"headers"部分是KeyValue类型，需要将每个键值对的值类型也写盘，具体见DefaultBytesMessage类。
-
+### 消费过程
+一个TOPIC(QUEUE)文件对应一个List<MappedByteBuffer>，订阅了该主题的消费者，从TOPIC(QUEUE)文件里一条一条顺序读完所有消息.
 >写在前面: 
 > 1. 在开始coding前请仔细阅读以下内容
 
