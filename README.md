@@ -7,7 +7,7 @@
    一次映射512M,当映射的Buffer用完后，重新分配新的buffer
 5. 因为消息的"properties"和"headers"部分是KeyValue类型，需要将每个键值对的值类型也写盘，具体见DefaultBytesMessage类。
 ### 消费过程
-一个TOPIC(QUEUE)文件对应一个<code>List&lt;MappedByteBuffer&gt;</code>，订阅了该主题的消费者，从TOPIC(QUEUE)文件里一条一条顺序读完所有消息.
+一个TOPIC(QUEUE)文件对应一个<code>List&lt;MappedByteBuffer&gt;</code>(借鉴自:<https://github.com/kzx1025/Tianchi-OrderDB/blob/master/src/main/java/com/db/table/BuyerOrderTable.java>) ,这种方式和ByteBuffer相比是很高效的)订阅了该主题的消费者，从TOPIC(QUEUE)文件里一条一条顺序读完所有消息.
 >写在前面: 
 > 1. 在开始coding前请仔细阅读以下内容
 

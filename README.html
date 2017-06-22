@@ -735,7 +735,7 @@ pre {
 </ol>
 <h3>
 <a id="user-content-消费过程" class="anchor" href="#%E6%B6%88%E8%B4%B9%E8%BF%87%E7%A8%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>消费过程</h3>
-<p>一个TOPIC(QUEUE)文件对应一个<code>List&lt;MappedByteBuffer&gt;</code>，订阅了该主题的消费者，从TOPIC(QUEUE)文件里一条一条顺序读完所有消息.</p>
+<p>一个TOPIC(QUEUE)文件对应一个<code>List&lt;MappedByteBuffer&gt;</code>(借鉴自:<a href="https://github.com/kzx1025/Tianchi-OrderDB/blob/master/src/main/java/com/db/table/BuyerOrderTable.java">https://github.com/kzx1025/Tianchi-OrderDB/blob/master/src/main/java/com/db/table/BuyerOrderTable.java</a>) ,这种方式和ByteBuffer相比是很高效的)订阅了该主题的消费者，从TOPIC(QUEUE)文件里一条一条顺序读完所有消息.</p>
 <blockquote>
 <p>写在前面:</p>
 <ol>
